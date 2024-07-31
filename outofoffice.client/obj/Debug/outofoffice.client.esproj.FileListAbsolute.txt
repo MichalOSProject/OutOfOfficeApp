@@ -1,3 +1,4 @@
 C:\Users\Mosic\Documents\CV\WebApp\OutOfOffice\outofoffice.client\obj\Debug\outofoffice.client.esproj.CoreCompileInputs.cache
 C:\Users\Mosic\Documents\CV\App\OutOfOffice\outofoffice.client\obj\Debug\outofoffice.client.esproj.CoreCompileInputs.cache
 C:\Users\Mosic\source\repos\MichalOSProject\OutOfOffice\outofoffice.client\obj\Debug\outofoffice.client.esproj.CoreCompileInputs.cache
+C:\Users\Mosic\Source\Repos\MichalOSProject\OutOfOfficeApp\outofoffice.client\obj\Debug\outofoffice.client.esproj.CoreCompileInputs.cache

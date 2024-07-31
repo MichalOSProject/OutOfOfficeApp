@@ -4833,11 +4833,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOffice\\OutOfOffice.Server\\OutOfOffice.Server.csproj",
+      "projectUniqueName": "C:\\Users\\Mosic\\Source\\Repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\OutOfOffice.Server.csproj",
       "projectName": "OutOfOffice.Server",
-      "projectPath": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOffice\\OutOfOffice.Server\\OutOfOffice.Server.csproj",
+      "projectPath": "C:\\Users\\Mosic\\Source\\Repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\OutOfOffice.Server.csproj",
       "packagesPath": "C:\\Users\\Mosic\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOffice\\OutOfOffice.Server\\obj\\",
+      "outputPath": "C:\\Users\\Mosic\\Source\\Repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
