@@ -1,0 +1,20 @@
+﻿#root {
+    align-items: flex-start;
+    background-color: #ffffff;
+    width: 100vw;
+    min-height: 100vh;
+    color: black;
+    position: relative;
+}
+#optionPanel {
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    flexDirection: row;
+}
