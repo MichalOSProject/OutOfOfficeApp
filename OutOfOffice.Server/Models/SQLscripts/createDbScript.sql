@@ -1,4 +1,10 @@
-﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+﻿Create database outOfOfficeBase
+GO
+
+use outOfOfficeBase
+GO
+
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
     CREATE TABLE [__EFMigrationsHistory] (
         [MigrationId] nvarchar(150) NOT NULL,
@@ -30,17 +36,12 @@ CREATE TABLE [Employees] (
     [EmployeePartner] int NOT NULL,
     [FreeDays] int NOT NULL,
     [Photo] nvarchar(max) NULL,
-    CONSTRAINT [PK_Employees] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Employees_Employees_EmployeePartner] FOREIGN KEY ([EmployeePartner]) REFERENCES [Employees] ([Id]) ON DELETE NO ACTION
 );
 GO
 
 INSERT INTO Employees (Name, Surname, Subdivision, Position, EmployeeStatus, EmployeePartner, FreeDays)
-VALUES ('Admin', 'Admin', 'WEB APP ADMIN', 'BOSS', 1, 1, 100),
-('Alice', 'Smith', 'HR Department', 'HR', 1, 1, 20),
-       ('Bob', 'Johnson', 'HR Department', 'HR', 1, 1, 18),
-       ('Carol', 'Williams', 'HR Department', 'HR', 1, 1, 22),
-       ('David', 'Brown', 'HR Department', 'HR', 1, 1, 19);
+VALUES ('Administrator', 'Account', 'IT', 'BOSS', 1, 2, 25),
+('System', 'Account', 'System', 'HR', 1, 2, 20);
 GO
 
 ALTER TABLE [Employees]
@@ -60,9 +61,9 @@ GO
 
 CREATE TABLE [AspNetUsers] (
     [Id] nvarchar(450) NOT NULL,
+    [EmployeeId] int NOT NULL,
+    [changePassword] bit NOT NULL,
     [Discriminator] nvarchar(21) NOT NULL,
-    [EmployeeId] int NULL,
-    [changePassword] bit NULL,
     [UserName] nvarchar(256) NULL,
     [NormalizedUserName] nvarchar(256) NULL,
     [Email] nvarchar(256) NULL,
@@ -99,7 +100,7 @@ CREATE TABLE [Projects] (
     [Id] int NOT NULL IDENTITY,
     [ProjectType] nvarchar(max) NOT NULL,
     [StartDate] date NOT NULL,
-    [EndDate] date NULL,
+    [EndDate] date NOT NULL,
     [ManagerId] int NOT NULL,
     [Comment] nvarchar(max) NULL,
     [ProjectStatus] bit NOT NULL,
@@ -161,11 +162,11 @@ GO
 
 CREATE TABLE [ProjectsDetails] (
     [Id] int NOT NULL IDENTITY,
+    [projectId] int NOT NULL,
     [employeeId] int NOT NULL,
-    [ProjectId] int NOT NULL,
     CONSTRAINT [PK_ProjectsDetails] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_ProjectsDetails_Employees_employeeId] FOREIGN KEY ([employeeId]) REFERENCES [Employees] ([Id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_ProjectsDetails_Projects_ProjectId] FOREIGN KEY ([ProjectId]) REFERENCES [Projects] ([Id]) ON DELETE NO ACTION
+    CONSTRAINT [FK_ProjectsDetails_Projects_projectId] FOREIGN KEY ([projectId]) REFERENCES [Projects] ([Id]) ON DELETE NO ACTION
 );
 GO
 
@@ -211,32 +212,76 @@ GO
 CREATE INDEX [IX_ProjectsDetails_employeeId] ON [ProjectsDetails] ([employeeId]);
 GO
 
-CREATE INDEX [IX_ProjectsDetails_ProjectId] ON [ProjectsDetails] ([ProjectId]);
+CREATE INDEX [IX_ProjectsDetails_projectId] ON [ProjectsDetails] ([projectId]);
+GO
+
+
+INSERT INTO dbo.AspNetUsers
+(
+id,
+    EmployeeId,
+    changePassword,
+    Discriminator,
+    UserName,
+    NormalizedUserName,
+    Email,
+    NormalizedEmail,
+    EmailConfirmed,
+    PasswordHash,
+    SecurityStamp,
+    ConcurrencyStamp,
+    PhoneNumber,
+    PhoneNumberConfirmed,
+    TwoFactorEnabled,
+    LockoutEnd,
+    LockoutEnabled,
+    AccessFailedCount
+)
+VALUES
+(
+NEWID(),
+    1,
+    1,
+    'ApplicationUser',
+    'Admin',
+    'ADMIN',
+    NULL,
+    NULL,
+    0,
+    'AQAAAAIAAYagAAAAENYFZ9yYn6SEwbgP3I+pgktO0AejAs2zvBmoL0x3ul9OPYY2hxiQ7ayGRxvhvipbJQ==',
+    '6AQEAC55ZQLGDEMBQ5EZKTSCICASMJSV',
+    '47ea6f66-a76d-4891-bfab-7330c95d7ee3',
+    NULL,
+    0,
+    0,
+    NULL,
+    1,
+    0
+),
+(
+NEWID(),
+    2,
+    1,
+    'ApplicationUser',
+    'HRAdmin',
+    'HRADMIN',
+    NULL,
+    NULL,
+    0,
+    'AQAAAAIAAYagAAAAENYFZ9yYn6SEwbgP3I+pgktO0AejAs2zvBmoL0x3ul9OPYY2hxiQ7ayGRxvhvipbJQ==',
+    '6AQEAC55ZQLGDEMBQ5EZKTSCICASMJSV',
+    '47ea6f66-a76d-4891-bfab-7330c95d7ee3',
+    NULL,
+    0,
+    0,
+    NULL,
+    1,
+    0
+);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20240716153833_InitialCreate', N'8.0.7');
-GO
-
---Triggers
-
-CREATE TRIGGER trg_CheckEmployeePartner
-ON Employees
-FOR INSERT, UPDATE
-AS
-BEGIN
-    IF EXISTS (
-        SELECT 1
-        FROM inserted i
-        JOIN Employees e ON i.EmployeePartner = e.Id
-        WHERE e.Position != 'HR'
-    )
-    BEGIN
-        RAISERROR ('EmployeePartner must have Position as HR', 16, 1);
-        ROLLBACK TRANSACTION;
-        RETURN;
-    END
-END;
+VALUES (N'20240731150633_InitialMigration', N'8.0.7');
 GO
 
 COMMIT;

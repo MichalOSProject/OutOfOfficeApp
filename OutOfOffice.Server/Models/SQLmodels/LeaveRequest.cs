@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace OutOfOffice.Server.Models.SQLmodels;
 
@@ -25,5 +26,6 @@ public partial class LeaveRequest
     ////Keys:
 
     //[ForeignKey("EmployeeId")]
+    //[JsonIgnore]
     //public Employee Leaver { get; set; }
 }

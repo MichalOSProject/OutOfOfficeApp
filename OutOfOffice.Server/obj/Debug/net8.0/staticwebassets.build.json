@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "Hash": "MhuPAUKsnIDdm6Q+naTeHunsz6lcyYuqD7hWqN2NOaw=",
+  "Hash": "S3lK2oEkaWsf7jlxXWB0oR60qK2hSAY/mH7hJZ53DXg=",
   "Source": "OutOfOffice.Server",
   "BasePath": "_content/OutOfOffice.Server",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [
     {
-      "Identity": "C:\\Users\\Mosic\\Source\\Repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\outofoffice.client.esproj",
+      "Identity": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\outofoffice.client.esproj",
       "Version": 2,
       "Source": "outofoffice.client",
       "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",

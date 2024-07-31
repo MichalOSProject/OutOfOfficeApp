@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace OutOfOffice.Server.Models.SQLmodels
 {
@@ -16,8 +17,10 @@ namespace OutOfOffice.Server.Models.SQLmodels
         ////Keys:
 
         //[ForeignKey("employeeId")]
+        //[JsonIgnore]
         //public Employee Manager { get; set; }
-        //[ForeignKey("ProjectId")]
+        //[ForeignKey("projectId")]
+        //[JsonIgnore]
         //public Project project { get; set; }
     }
 }

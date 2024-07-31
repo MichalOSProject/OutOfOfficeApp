@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace OutOfOffice.Server.Models.SQLmodels;
 
@@ -26,5 +27,6 @@ public partial class Project
     ////Keys:
 
     //[ForeignKey("ManagerId")]
+    //[JsonIgnore]
     //public Employee Manager { get; set; }
 }

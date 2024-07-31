@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace OutOfOffice.Server.Models.SQLmodels;
 
@@ -26,7 +27,7 @@ public partial class Employee
     public string? Photo { get; set; }
 
     ////Keys:
-
+    //[JsonIgnore]
     //[ForeignKey("EmployeePartner")]
     //public Employee Partner { get; set; }
 }

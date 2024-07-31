@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "U/iqRFKYNg0=",
+  "dgSpecHash": "0+wMV0bEb4g=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Mosic\\Source\\Repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\OutOfOffice.Server.csproj",
+  "projectFilePath": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\OutOfOffice.Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Mosic\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Mosic\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

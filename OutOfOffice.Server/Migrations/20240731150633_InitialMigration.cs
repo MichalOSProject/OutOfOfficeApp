@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OutOfOffice.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,9 +77,9 @@ namespace OutOfOffice.Server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    changePassword = table.Column<bool>(type: "bit", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: true),
-                    changePassword = table.Column<bool>(type: "bit", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -138,7 +138,7 @@ namespace OutOfOffice.Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProjectType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    EndDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ManagerId = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProjectStatus = table.Column<bool>(type: "bit", nullable: false)
@@ -274,8 +274,7 @@ namespace OutOfOffice.Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     projectId = table.Column<int>(type: "int", nullable: false),
-                    employeeId = table.Column<int>(type: "int", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                    employeeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,8 +286,8 @@ namespace OutOfOffice.Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectsDetails_Projects_ProjectId",
-                        column: x => x.ProjectId,
+                        name: "FK_ProjectsDetails_Projects_projectId",
+                        column: x => x.projectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -369,9 +368,9 @@ namespace OutOfOffice.Server.Migrations
                 column: "employeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectsDetails_ProjectId",
+                name: "IX_ProjectsDetails_projectId",
                 table: "ProjectsDetails",
-                column: "ProjectId");
+                column: "projectId");
         }
 
         /// <inheritdoc />

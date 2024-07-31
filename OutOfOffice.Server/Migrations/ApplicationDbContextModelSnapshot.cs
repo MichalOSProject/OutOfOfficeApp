@@ -73,80 +73,6 @@ namespace OutOfOffice.Server.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -228,7 +154,87 @@ namespace OutOfOffice.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.ApprovalRequest", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("changePassword")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.ApprovalRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -258,7 +264,7 @@ namespace OutOfOffice.Server.Migrations
                     b.ToTable("ApprovalRequests");
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.Employee", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -306,7 +312,7 @@ namespace OutOfOffice.Server.Migrations
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.LeaveRequest", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.LeaveRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -341,7 +347,7 @@ namespace OutOfOffice.Server.Migrations
                     b.ToTable("LeaveRequests");
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.Project", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -352,7 +358,7 @@ namespace OutOfOffice.Server.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("EndDate")
+                    b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
                     b.Property<int>("ManagerId")
@@ -375,16 +381,13 @@ namespace OutOfOffice.Server.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.ProjectDetails", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.ProjectDetails", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
 
                     b.Property<int>("employeeId")
                         .HasColumnType("int");
@@ -394,26 +397,11 @@ namespace OutOfOffice.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
-
                     b.HasIndex("employeeId");
 
+                    b.HasIndex("projectId");
+
                     b.ToTable("ProjectsDetails");
-                });
-
-            modelBuilder.Entity("OutOfOffice.Server.Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("changePassword")
-                        .HasColumnType("bit");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -427,7 +415,7 @@ namespace OutOfOffice.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -436,7 +424,7 @@ namespace OutOfOffice.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -451,7 +439,7 @@ namespace OutOfOffice.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -460,22 +448,33 @@ namespace OutOfOffice.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.ApprovalRequest", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.ApplicationUser", b =>
                 {
-                    b.HasOne("OutOfOffice.Server.Models.Employee", "Approver")
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.ApprovalRequest", b =>
+                {
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.Employee", "Approver")
                         .WithMany()
                         .HasForeignKey("ApproverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OutOfOffice.Server.Models.LeaveRequest", "baseRequest")
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.LeaveRequest", "baseRequest")
                         .WithMany()
                         .HasForeignKey("LeaveRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -486,9 +485,9 @@ namespace OutOfOffice.Server.Migrations
                     b.Navigation("baseRequest");
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.Employee", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.Employee", b =>
                 {
-                    b.HasOne("OutOfOffice.Server.Models.Employee", "Partner")
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.Employee", "Partner")
                         .WithMany()
                         .HasForeignKey("EmployeePartner")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -497,9 +496,9 @@ namespace OutOfOffice.Server.Migrations
                     b.Navigation("Partner");
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.LeaveRequest", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.LeaveRequest", b =>
                 {
-                    b.HasOne("OutOfOffice.Server.Models.Employee", "Leaver")
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.Employee", "Leaver")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -508,9 +507,9 @@ namespace OutOfOffice.Server.Migrations
                     b.Navigation("Leaver");
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.Project", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.Project", b =>
                 {
-                    b.HasOne("OutOfOffice.Server.Models.Employee", "Manager")
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.Employee", "Manager")
                         .WithMany()
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -519,34 +518,23 @@ namespace OutOfOffice.Server.Migrations
                     b.Navigation("Manager");
                 });
 
-            modelBuilder.Entity("OutOfOffice.Server.Models.ProjectDetails", b =>
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.ProjectDetails", b =>
                 {
-                    b.HasOne("OutOfOffice.Server.Models.Project", "project")
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.Employee", "Manager")
                         .WithMany()
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("employeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OutOfOffice.Server.Models.Employee", "Manager")
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.Project", "project")
                         .WithMany()
-                        .HasForeignKey("employeeId")
+                        .HasForeignKey("projectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Manager");
 
                     b.Navigation("project");
-                });
-
-            modelBuilder.Entity("OutOfOffice.Server.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("OutOfOffice.Server.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

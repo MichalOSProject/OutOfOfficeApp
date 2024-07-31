@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace OutOfOffice.Server.Models.SQLmodels
 {
@@ -12,6 +13,7 @@ namespace OutOfOffice.Server.Models.SQLmodels
         public bool changePassword { get; set; }
 
         ////Keys:
+        //[JsonIgnore]
         //[ForeignKey("EmployeeId")]
         //public virtual Employee Employee { get; set; }
     }

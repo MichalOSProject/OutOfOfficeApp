@@ -3,7 +3,7 @@
 "ServerUrl": "https://localhost:5173",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
-"WorkingDirectory": "C:\\Users\\Mosic\\Source\\Repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\..\\outofoffice.client",
+"WorkingDirectory": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\..\\outofoffice.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }
