@@ -15,16 +15,19 @@ namespace OutOfOffice.Server.Controllers
         private readonly AuthService _authService;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserService _userService;
+        private readonly ApplicationDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             AuthService authService,
+            ApplicationDbContext context,
             IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _authService = authService;
+            _context = context;
             _userService = userService;
         }
         [HttpPost("login")]
@@ -37,8 +40,14 @@ namespace OutOfOffice.Server.Controllers
 
                 if (result.Succeeded)
                 {
-                    var token = await _authService.GenerateTokenAsync(user);
-                    return Ok(new { token });
+                    var userEmployee = await _context.Employees.FindAsync(user.EmployeeId);
+                    if (userEmployee != null && userEmployee.EmployeeStatus)
+                    {
+                        var token = await _authService.GenerateTokenAsync(user);
+                        return Ok(new { token });
+
+                    }
+                    return Unauthorized(new { message = "Account is disabled or login is not matched to Profile" });
                 }
                 else if (result.IsLockedOut)
                 {

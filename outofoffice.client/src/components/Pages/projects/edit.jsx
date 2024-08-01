@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Box, TextField, Button, InputLabel, FormControl, Alert, AlertTitle, Select, MenuItem } from '@mui/material';
+import {
+    Box, TextField, Button, InputLabel, FormControl, Alert, AlertTitle, Select, MenuItem } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
-import { useLocation } from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
+import { DataGrid } from '@mui/x-data-grid';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -11,7 +13,7 @@ const ProjectsEdit = () => {
     const location = useLocation();
     const selProj = location.state?.selProj || {};
     const PM = location.state?.PM || {};
-    const { register, handleSubmit, getValues, formState: { errors } } = useForm();
+    const { register, getValues, formState: { errors } } = useForm();
     const [selID, setSelID] = useState(0);
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -19,6 +21,10 @@ const ProjectsEdit = () => {
     const isAddMode = location.pathname.includes('/add');
     const [startDate, setStartDate] = useState(dayjs());
     const [endDate, setEndDate] = useState(dayjs());
+    const [projectMembers, setProjectMembers] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
+    const [newMembersList, setNewMembersList] = useState([]);
+    const [selectedProjectMembers, setSelectedProjectMembers] = useState([]);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -30,20 +36,72 @@ const ProjectsEdit = () => {
             setStartDate(dayjs(selProj.startDate))
             setEndDate(dayjs(selProj.endDate))
         }
+        if (projectMembers.length == 0) {
+            fetch('https://localhost:7130/api/Project/projectsMembers', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ projID: selProj.id })
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                setProjectMembers(data)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        if (allUsers.length == 0) {
+            fetch('https://localhost:7130/api/employee', {
+                method: 'Get',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                setAllUsers(data)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
     }, []);
 
-    const onSubmit = async () => {
+    const columns = [
+        { field: 'LP', headerName: 'LP' },
+        { field: 'id', headerName: 'ID:' },
+        { field: 'name', headerName: 'Name:' },
+        { field: 'surname', headerName: 'Surname:' },
+        { field: 'subdivision', headerName: 'Subdivision:' },
+        { field: 'position', headerName: 'Position:' },
+        { field: 'employeeStatus', headerName: 'Status:' }
+    ];
+
+    const rows = projectMembers.map((item, index) => ({
+        LP: index + 1,
+        id: item.id,
+        name: item.name,
+        surname: item.surname,
+        position: item.position,
+        subdivision: item.subdivision,
+        employeeStatus: item.employeeStatus ? 'Active' : 'Inactive'
+    }));
+
+    const onSubmit = async (event) => {
+        event.preventDefault();
+        console.log('PM1: ',PM)
         const formData = getValues();
-        !isAddMode ?
-            formData.ID = parseInt(selID) : null;
+        if (isAddMode) {
+            formData.members = newMembersList
+        } else {
+            formData.ID = parseInt(selID)
+        }
         formData.projectStatus = formData.projectStatus === 'true';
         formData.managerId = parseInt(formData.managerId);
         formData.startDate = dayjs(startDate).format('YYYY-MM-DD');
         formData.endDate = dayjs(endDate).format('YYYY-MM-DD');
-        var formattedData = new FormData();
-        for (const key in formData) {
-            formattedData.append(key, formData[key]);
-        }
         console.log(formData)
 
         fetch(isAddMode ? 'https://localhost:7130/api/project/add' : 'https://localhost:7130/api/project/edit', {
@@ -54,9 +112,9 @@ const ProjectsEdit = () => {
             },
             body: JSON.stringify(formData)
         }).then(response => {
-            return response.json();
+            return response.text();
         }).then(data => {
-            console.log('Success:', data);
+            console.log('Success:', data.message);
             setAlertMessage(isAddMode ? 'Project added successfully' : 'Project update successfully');
             setAlertTitle('success');
             setOpenAlert(true);
@@ -66,7 +124,53 @@ const ProjectsEdit = () => {
             setAlertTitle('error');
             setOpenAlert(true);
         });
+        console.log('PM2: ', PM)
     };
+
+    const handleRowSelection = (newSelection) => {
+        setSelectedProjectMembers(newSelection)
+    };
+
+    const handleDeleteMembersClick = () => {
+        fetch('https://localhost:7130/api/Project/deleteProjectsMembers', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ projID: selID, members: selectedProjectMembers })
+        }).then(response => {
+            return response.text();
+        }).then(data => {
+            console.log('Success:', data);
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+        window.location.reload();
+    };
+    
+    const handleChangeMembersList = (e) => {
+        setNewMembersList(e.target.value)
+    };
+
+    const handleAddMembersClick = () => {
+        fetch('https://localhost:7130/api/Project/addProjectsMembers', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ projID: selID, members: newMembersList })
+        }).then(response => {
+            return response.text();
+        }).then(data => {
+            console.log('Success:', data);
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+        window.location.reload();
+    };
+
     return (
         <div>
             <h1>{isAddMode ? 'Add New Project' : 'Project ID: ' + selID}</h1>
@@ -77,7 +181,6 @@ const ProjectsEdit = () => {
                 }}
                 noValidate
                 autoComplete="off"
-                onSubmit={handleSubmit(onSubmit)}
             >
                 <TextField
                     required
@@ -97,7 +200,7 @@ const ProjectsEdit = () => {
                         onChange={(newValue) => {
                             setStartDate(newValue)
                         }}
-                        disablePast={isAddMode }
+                        disablePast={isAddMode}
                     />
                     <DatePicker
                         required
@@ -124,8 +227,8 @@ const ProjectsEdit = () => {
                         error={!!errors.managerId}
                         helpertext={errors.managerId ? 'Project Manager is required' : ''}
                     >
-                        {PM.map((model, index) => (
-                            <MenuItem key={index} value={model.id} disabled={!model.employeeStatus}>{model.name + ' ' + model.surname}</MenuItem>
+                        {Array.isArray(PM) && PM.map((model, index) => (
+                                <MenuItem key={index} value={model.id} disabled={!model.employeeStatus}>{model.name + ' ' + model.surname}</MenuItem>
                         ))
                         }
                     </Select>
@@ -152,10 +255,50 @@ const ProjectsEdit = () => {
                         <MenuItem value={'false'}>Inactive</MenuItem>
                     </Select>
                 </FormControl>
-                <Button type="submit" variant="contained" color="primary">
-                    {isAddMode ? 'Add' : 'Confirm'}
-                </Button>
+                <br />
+                {!isAddMode && (
+                    <Button type="submit" variant="contained" color="primary" onClick={onSubmit}>
+                Confirm
+                    </Button>)}
             </Box>
+            <h2>Project Members:</h2>
+            <FormControl sx={{ m: 1, minWidth: 200 }} required={!isAddMode}>
+                <InputLabel id="newMembers-label">{isAddMode ? 'Select Members' :'Add new Members'}</InputLabel>
+                <Select
+                    labelId="newMembers-label"
+                    label="New members"
+                    autoWidth
+                    multiple
+                    name="newMembers"
+                    value={newMembersList}
+                    onChange={handleChangeMembersList}
+                >
+                    {allUsers.map((model, index) => (
+                        <MenuItem key={index} value={model.id} disabled={!model.employeeStatus}>{model.name + ' ' + model.surname}</MenuItem>
+                    ))
+                    }
+                </Select>
+            </FormControl>
+            {!isAddMode && (<Button variant="contained" onClick={handleAddMembersClick} disabled={newMembersList.length == 0}>Add members</Button>)}
+            <DataGrid
+                tablesort
+                rows={rows}
+                columns={columns}
+                autoHeight
+                checkboxSelection
+                onRowSelectionModelChange={(newSelection) => handleRowSelection(newSelection)}
+                initialState={{
+                    pagination: {
+                        paginationModel: { page: 0, pageSize: 15 },
+                    },
+                }}
+                pageSizeOptions={[5, 10, 15]}
+            />
+            {isAddMode && (
+                <Button type="submit" variant="contained" color="primary" onClick={onSubmit}>
+                    Add Project
+                </Button>)}
+            {!isAddMode && (<Button variant="contained" onClick={handleDeleteMembersClick} disabled={selectedProjectMembers.length == 0}>Delete members</Button>)}
             <Alert
                 severity={alertTitle}
                 onClose={handleAlertClose}

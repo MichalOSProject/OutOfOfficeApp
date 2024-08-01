@@ -3,36 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\home.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\home.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\employees\\employee.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\employees\\employee.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.server\\controllers\\projectcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|solutionrelative:outofoffice.server\\controllers\\projectcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.server\\models\\sqlmodels\\projectdetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|solutionrelative:outofoffice.server\\models\\sqlmodels\\projectdetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.server\\models\\projectsmembersmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|solutionrelative:outofoffice.server\\models\\projectsmembersmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\approvalrequests\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\approvalrequests\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\employees\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\employees\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\leaverequests\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\leaverequests\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\projects\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\projects\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\projects\\project.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\projects\\project.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\accessforbidden.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\accessforbidden.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.server\\controllers\\employeecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|solutionrelative:outofoffice.server\\controllers\\employeecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\employees\\employee.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\employees\\employee.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -66,100 +58,123 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "employee.jsx",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\employees\\employee.jsx",
-              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\employees\\employee.jsx",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\employees\\employee.jsx",
-              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\employees\\employee.jsx",
-              "ViewState": "AQIAABIAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2024-07-31T14:32:48.967Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "home.jsx",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\home.jsx",
-              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\home.jsx",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\home.jsx",
-              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\home.jsx",
-              "ViewState": "AQIAAAUAAAAAAAAAAAAAAAEAAAAoAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2024-07-31T14:30:40.225Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "edit.jsx",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\leaveRequests\\edit.jsx",
-              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\leaveRequests\\edit.jsx",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\leaveRequests\\edit.jsx",
-              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\leaveRequests\\edit.jsx",
-              "ViewState": "AQIAABsAAAAAAAAAAAAAAJcAAAACAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2024-07-31T14:00:10.742Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
               "Title": "edit.jsx",
               "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\employees\\edit.jsx",
               "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\employees\\edit.jsx",
               "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\employees\\edit.jsx",
               "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\employees\\edit.jsx",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABkAAAAzAAAA",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAACcAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2024-07-31T13:59:44.893Z"
+              "WhenOpened": "2024-08-01T15:18:31.748Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "edit.jsx",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\projects\\edit.jsx",
+              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\projects\\edit.jsx",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\projects\\edit.jsx",
+              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\projects\\edit.jsx",
+              "ViewState": "AQIAAKcAAAAAAAAAAAAqwFsAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-08-01T12:31:29.821Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "aaf6ea98-d7a5-4dee-9d99-d0fee86f6649",
+        "Display": 1,
+        "X": -5,
+        "Y": 457,
+        "Width": 1090,
+        "Height": 835,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "project.jsx",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\projects\\project.jsx",
+              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\projects\\project.jsx",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\projects\\project.jsx",
+              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\projects\\project.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-08-01T12:31:30.254Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "edit.jsx",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\approvalRequests\\edit.jsx",
-              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\approvalRequests\\edit.jsx",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\approvalRequests\\edit.jsx",
-              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\approvalRequests\\edit.jsx",
-              "ViewState": "AQIAAKIAAAAAAAAAAAAAADgAAAAfAAAA",
+              "Title": "employee.jsx",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\employees\\employee.jsx",
+              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\employees\\employee.jsx",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\employees\\employee.jsx",
+              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\employees\\employee.jsx",
+              "ViewState": "AQIAACQAAAAAAAAAAAAAADIAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2024-07-31T13:59:31.284Z"
+              "WhenOpened": "2024-08-01T12:42:15.39Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "projectsMembersModel.cs",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Models\\projectsMembersModel.cs",
-              "RelativeDocumentMoniker": "OutOfOffice.Server\\Models\\projectsMembersModel.cs",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Models\\projectsMembersModel.cs",
-              "RelativeToolTip": "OutOfOffice.Server\\Models\\projectsMembersModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAARAAAA",
+              "Title": "EmployeeController.cs",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Controllers\\EmployeeController.cs",
+              "RelativeDocumentMoniker": "OutOfOffice.Server\\Controllers\\EmployeeController.cs",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Controllers\\EmployeeController.cs",
+              "RelativeToolTip": "OutOfOffice.Server\\Controllers\\EmployeeController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-31T13:10:53.444Z"
-            },
+              "WhenOpened": "2024-08-01T14:16:32.728Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "73c85eac-7b75-453f-ae66-d56d355cc5d9",
+        "Display": 0,
+        "X": -862,
+        "Y": 801,
+        "Width": 3098,
+        "Height": 835,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "ProjectDetails.cs",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Models\\SQLmodels\\ProjectDetails.cs",
-              "RelativeDocumentMoniker": "OutOfOffice.Server\\Models\\SQLmodels\\ProjectDetails.cs",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Models\\SQLmodels\\ProjectDetails.cs",
-              "RelativeToolTip": "OutOfOffice.Server\\Models\\SQLmodels\\ProjectDetails.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAATAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-31T12:48:56.273Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ProjectController.cs",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Controllers\\ProjectController.cs",
-              "RelativeDocumentMoniker": "OutOfOffice.Server\\Controllers\\ProjectController.cs",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Controllers\\ProjectController.cs",
-              "RelativeToolTip": "OutOfOffice.Server\\Controllers\\ProjectController.cs",
-              "ViewState": "AQIAADIAAAAAAAAAAAAwwJIAAAAzAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-31T12:40:50.716Z"
+              "Title": "AccessForbidden.jsx",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\AccessForbidden.jsx",
+              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\AccessForbidden.jsx",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\AccessForbidden.jsx",
+              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\AccessForbidden.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-08-01T15:00:01.076Z",
+              "EditorCaption": ""
             }
           ]
         }

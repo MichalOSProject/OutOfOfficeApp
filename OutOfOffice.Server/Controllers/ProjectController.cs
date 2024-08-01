@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Server.Models;
 using OutOfOffice.Server.Models.SQLmodels;
@@ -10,24 +11,44 @@ namespace OutOfOffice.Server.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ProjectController(ApplicationDbContext context)
+        public ProjectController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult<Project>> addProject([FromBody] Project requestData)
+        public async Task<ActionResult<Project>> addProject([FromBody] newProject requestData)
         {
             if (requestData == null)
             {
                 return BadRequest("Invalid data.");
             }
 
-            _context.Projects.Add(requestData);
+            var newProject = _mapper.Map<Project>(requestData);
+
+            _context.Projects.Add(newProject);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Project added successfully" });
+            if (requestData.members == null)
+            {
+                return Ok(new { message = "Project added successfully without members" });
+            }
+
+            foreach (int idMember in requestData.members)
+            {
+                var newProjectMember = new ProjectDetails
+                {
+                    projectId = newProject.Id,
+                    employeeId = idMember
+                };
+                _context.ProjectsDetails.Add(newProjectMember);
+            }
+            await _context.SaveChangesAsync();
+
+            return Ok("Project added successfully with members.");
         }
 
         [HttpPost("edit")]
@@ -145,7 +166,7 @@ namespace OutOfOffice.Server.Controllers
                             .FirstOrDefaultAsync();
 
                         if (memberToRemove != null)
-                        _context.ProjectsDetails.Remove(memberToRemove);
+                            _context.ProjectsDetails.Remove(memberToRemove);
                     }
                 }
                 await _context.SaveChangesAsync();

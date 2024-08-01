@@ -23,14 +23,14 @@ const Login = () => {
                 return response.json();
             }
             setIsCorrect(false)
-            throw new Error('Something went wrong');
+            throw new Error('Something went wrong', response.message);
         }).then(data => {
             const { token } = data;
             localStorage.setItem('token', token);
             console.log('Success:');
                 navigate('/',);
         }).catch(error => {
-            console.error('Error:', error);
+            console.error('Error:', error.message);
         });
     };
     return (

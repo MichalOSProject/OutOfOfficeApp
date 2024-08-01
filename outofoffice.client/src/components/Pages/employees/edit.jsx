@@ -19,6 +19,8 @@ const EmployeesEdit = () => {
     const [isEnableAdminMode, setisEnableAdminMode] = useState(false);
     const admList = ['BOSS', 'Admin'];
     const isAddMode = location.pathname.includes('/add');
+    const [newPosition, setNewPosition] = useState(!isAddMode);
+
     const isHrMode = () => { //HR data Access
         const decodedToken = jwtDecode(localStorage.getItem('token'));
         return decodedToken.position === 'HR' || admList.includes(decodedToken.position) ? true : false;
@@ -35,6 +37,7 @@ const EmployeesEdit = () => {
 
     useEffect(() => {
         setSelID(data.id)
+        isAddMode ? setisEnablePasswordChange(true) : null;
         isHrMode() ? null : navigate('/403',);
         if (isAdminMode()) {
             fetch('https://localhost:7130/api/account/username', {
@@ -147,6 +150,10 @@ const EmployeesEdit = () => {
         setisEnablePasswordChange(event.target.checked);
     };
 
+    const handleChangeIndividualOption = (event) => {
+        setNewPosition(event.target.checked);
+    };
+
     return (
         <div>
             <h1>{isAddMode ? 'Add New Employee' : 'Employee ID: ' + selID}</h1>
@@ -186,15 +193,34 @@ const EmployeesEdit = () => {
                     error={!!errors.subdivision}
                     helpertext={errors.subdivision ? 'Subdivision is required' : ''}
                 />
-                <TextField
+                <br />
+                {newPosition && (<TextField
                     required
                     name="position"
-                    label="Position"
-                    defaultValue={data.position}
+                    label="Employee Position"
+                    defaultValue={ data.position}
                     {...register("position", { required: true })}
                     error={!!errors.position}
                     helpertext={errors.position ? 'Position is required' : ''}
-                />
+                />)}
+                {!newPosition && (<FormControl sx={{ m: 1, minWidth: 200 }} required>
+                    <InputLabel id="employeePosition-label">Employee Position</InputLabel>
+                    <Select
+                        labelId="employeePosition-label"
+                        label="Employee Position"
+                        autoWidth
+                        name="employeePosition"
+                        {...register("position", { required: true })}
+                        error={!!errors.position}
+                        helpertext={errors.position ? 'Employee Position is required' : ''}
+                    >
+                        <MenuItem value={'HR'}>HR Manager</MenuItem>
+                        <MenuItem value={'Project Manager'}>Project Manager</MenuItem>
+                        <MenuItem value={'BOSS'}>System Administrator</MenuItem>
+                    </Select>
+                </FormControl>)}
+                <b>Individual option? <Checkbox checked={newPosition} onChange={handleChangeIndividualOption} /></b>
+                <br/>
                 <FormControl sx={{ m: 1, minWidth: 200 }} required>
                     <InputLabel id="employeeStatus-label">Employee Status</InputLabel>
                     <Select
@@ -246,13 +272,13 @@ const EmployeesEdit = () => {
                     defaultValue={data.photo}
                     {...register("photo", { required: false })}
                 />
-                {(isAdminMode()) && (
+                {(isAdminMode() && !isAddMode )&& (
                     <Box>
                         <br />
                         <h2>Edit Logon Data? <Checkbox checked={isEnableAdminMode} onChange={handleChangeAdminMode} /></h2>
                     </Box>
                 )}
-                {((isAdminMode()) && (isEnableAdminMode)) && (
+                {( (isAdminMode() && isEnableAdminMode) || isAddMode) && (
                     <Box>
                         <h2>Only for adding a new user or for administrators</h2>
 
@@ -264,8 +290,8 @@ const EmployeesEdit = () => {
                             error={!!errors.login}
                             helpertext={errors.login ? 'Login is required' : ''}
                         />
-                        <h3>Require change password at next logon:<Checkbox defaultChecked={false} {...register("changePassword")} /></h3>
-                        <h3>Do you want to change a password? <Checkbox checked={isEnablePasswordChange} onChange={handleChangePassword} /></h3>
+                        <h3>Require change password at next logon:<Checkbox defaultChecked={isAddMode} {...register("changePassword")} /></h3>
+                        <h3>Do you want to change a password? <Checkbox checked={isEnablePasswordChange} onChange={handleChangePassword} disabled={isAddMode} /></h3>
                         <TextField
                             name="password"
                             label="Password"

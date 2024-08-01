@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OutOfOffice.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c91ca77de3eccff884d85085a21e5241f36dc6d7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da227905c662bff24a59dd7848c920ed45986968")]
 [assembly: System.Reflection.AssemblyProductAttribute("OutOfOffice.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OutOfOffice.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

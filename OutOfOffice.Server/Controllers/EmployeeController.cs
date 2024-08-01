@@ -47,6 +47,7 @@ namespace OutOfOffice.Server.Controllers
                     UserName = newLogin.Login,
                     changePassword = newLogin.changePassword,
                     EmployeeId = newEmployee.Id
+
                 };
 
                 var result = await _userManager.CreateAsync(user, newLogin.Password);

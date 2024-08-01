@@ -9,5 +9,6 @@ public class MappingProfile : Profile
     {
         CreateMap<newUser, Employee>();
         CreateMap<newUser, registerUser>();
+        CreateMap<newProject, Project>();
     }
 }
