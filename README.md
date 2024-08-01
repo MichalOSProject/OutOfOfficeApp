@@ -11,7 +11,6 @@ Elements requiring completion:
 
 - Restrict controller actions based on access groups.
 - Restrict Front-End access based on permissions stored in tokens.
-- Create a panel to add employees to projects (controller functions already exist).
 - Develop a view for required approvals for Project Managers.
 - Automatically close leave requests once all approvals are obtained.
 
