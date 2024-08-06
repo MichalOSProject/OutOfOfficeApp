@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\header\\header.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\header\\header.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.server\\security\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|solutionrelative:outofoffice.server\\security\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\approvalrequests\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\approvalrequests\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\approvalrequests\\approvalrequest.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\approvalrequests\\approvalrequest.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\approvalrequests\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\approvalrequests\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,21 +26,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Security\\AuthService.cs",
-              "RelativeDocumentMoniker": "OutOfOffice.Server\\Security\\AuthService.cs",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Security\\AuthService.cs",
-              "RelativeToolTip": "OutOfOffice.Server\\Security\\AuthService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAA7AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-06T14:00:40.714Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
@@ -58,8 +49,38 @@
               "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Header.jsx",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Header\\Header.jsx",
+              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Header\\Header.jsx",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Header\\Header.jsx",
+              "RelativeToolTip": "outofoffice.client\\src\\components\\Header\\Header.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB8AAACMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-08-06T14:03:46.848Z",
+              "EditorCaption": ""
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Security\\AuthService.cs",
+              "RelativeDocumentMoniker": "OutOfOffice.Server\\Security\\AuthService.cs",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Security\\AuthService.cs",
+              "RelativeToolTip": "OutOfOffice.Server\\Security\\AuthService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAA7AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T14:00:40.714Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "edit.jsx",
               "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\approvalRequests\\edit.jsx",
               "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\approvalRequests\\edit.jsx",
