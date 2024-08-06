@@ -247,7 +247,7 @@ namespace OutOfOffice.Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApproverId = table.Column<int>(type: "int", nullable: false),
                     LeaveRequestId = table.Column<int>(type: "int", nullable: false),
-                    RequestStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

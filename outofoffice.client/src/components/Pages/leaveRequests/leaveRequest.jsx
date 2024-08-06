@@ -8,44 +8,39 @@ const LeaveRequest = () => {
     const [selLR, setSelLR] = useState({});
     const [LRs, setLRs] = useState([]);
     const [data, setData] = useState([]);
-    const [error, setError] = useState(null);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
     useEffect(() => {
         if (data.length == 0) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('https://localhost:7130/api/employee');
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const result = await response.json();
-                    console.log('Data fetched:', result);
-                    setData(result);
-                } catch (error) {
-                    setError(error);
-                    console.error('Error fetching data:', error);
+            fetch('https://localhost:7130/api/employee', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            };
-            fetchData();
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                setData(data)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
         if (LRs.length == 0) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('https://localhost:7130/api/leaveRequest');
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const result = await response.json();
-                    console.log('Data fetched:', result);
-                    setLRs(result);
-                } catch (error) {
-                    setError(error);
-                    console.error('Error fetching data:', error);
+            fetch('https://localhost:7130/api/leaveRequest', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            };
-            fetchData();
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                setLRs(data)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
     }, [data, setLRs]);
 
@@ -88,8 +83,6 @@ const LeaveRequest = () => {
         setSelID(selectedId);
         setSelLineNumber(selectedLineNumber);
         setSelLR(selectedRow);
-
-        console.log('Selected Leave Request:', selectedRow);
     };
 
     const handleEditClick = () => {

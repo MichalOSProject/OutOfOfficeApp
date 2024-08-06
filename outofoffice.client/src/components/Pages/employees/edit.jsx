@@ -30,7 +30,6 @@ const EmployeesEdit = () => {
         return admList.includes(decodedToken.position) ? true : false;
     }
 
-
     const handleAlertClose = () => {
         setOpenAlert(false);
     };

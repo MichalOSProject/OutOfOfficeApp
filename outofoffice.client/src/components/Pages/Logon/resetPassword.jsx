@@ -43,7 +43,6 @@ const ResetPasswordPage = () => {
                 }
                 throw new Error('Something went wrong');
             }).then(data => {
-                console.log(data);
                 const { token } = data;
                 localStorage.setItem('token', token);
                 console.log('Success:');
@@ -65,7 +64,7 @@ const ResetPasswordPage = () => {
                 boxSizing: 'border-box'
             }}
         >
-            <h1>Reset your Password </h1>
+            <h1>Change your Password </h1>
             <h2 style={{ color: 'red' }}>{isCorrectStatus === false ? 'The passwords entered are not the same!' : ''}</h2>
             <Box
                 component="form"

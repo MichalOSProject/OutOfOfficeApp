@@ -8,31 +8,28 @@ const Employees = () => {
     const [selEmplo, setselEmplo] = useState({});
     const [data, setData] = useState([]);
     const [HR, setHR] = useState([]);
-    const [error, setError] = useState(null);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
     useEffect(() => {
         if (data.length == 0) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('https://localhost:7130/api/employee');
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const result = await response.json();
-                    console.log('Data fetched:', result);
-                    setData(result);
-                } catch (error) {
-                    setError(error);
-                    console.error('Error fetching data:', error);
+            fetch('https://localhost:7130/api/employee', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            };
-            fetchData();
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                const filteredHR = data.filter(emplo => emplo.position === 'HR');
+                setHR(filteredHR);
+                setData(data)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
-        const filteredHR = data.filter(emplo => emplo.position === 'HR');
-        setHR(filteredHR);
-        console.log('Filtered HR employees:', HR);
+
     }, [data]);
 
     const columns = [
@@ -76,8 +73,6 @@ const Employees = () => {
         setSelID(selectedId);
         setSelLineNumber(selectedLineNumber);
         setselEmplo(selectedRow);
-
-        console.log('Selected Employee:', selectedRow);
     };
 
     const handleEditClick = () => {

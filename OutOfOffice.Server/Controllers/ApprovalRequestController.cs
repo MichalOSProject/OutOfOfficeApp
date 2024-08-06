@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OutOfOffice.Server.Models;
 using OutOfOffice.Server.Models.SQLmodels;
+using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 
 namespace OutOfOffice.Server.Controllers
 {
@@ -15,42 +18,30 @@ namespace OutOfOffice.Server.Controllers
             _context = context;
         }
 
-        [HttpPost("add")]
-        public async Task<ActionResult<ApprovalRequest>> addApprovalRequest([FromBody] ApprovalRequest requestData)
-        {
-            if (requestData == null)
-            {
-                return BadRequest("Invalid data.");
-            }
-
-            _context.ApprovalRequests.Add(requestData);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Approval Request added successfully" });
-        }
-
         [HttpPost("edit")]
-        public async Task<ActionResult<ApprovalRequest>> editApprovalRequest([FromBody] ApprovalRequest requestData)
+        public async Task<ActionResult<ApprovalRequest>> updateApprovalRequest([FromBody] updateRequestModel requestData)
         {
             if (requestData == null)
             {
                 return BadRequest("Invalid data.");
             }
+            if (requestData.status == 0)
+            {
+                return BadRequest("Status not updated");
+            }
 
-            var ApprovalRequests = _context.ApprovalRequests.FirstOrDefault(item => item.Id == requestData.Id);
+            var ApprovalRequests = _context.ApprovalRequests.FirstOrDefault(item => item.Id == requestData.id);
             if (ApprovalRequests == null)
             {
                 return BadRequest("The Approval Request does not exist");
             }
 
-            ApprovalRequests.ApproverId = requestData.ApproverId;
-            ApprovalRequests.LeaveRequestId = requestData.LeaveRequestId;
-            ApprovalRequests.RequestStatus = requestData.RequestStatus;
-            ApprovalRequests.Comment = requestData.Comment;
+            ApprovalRequests.Status = requestData.status;
+            ApprovalRequests.Comment = requestData.comment;
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Approval Request added successfully" });
+            return Ok(new { message = "Approval Request updated successfully" });
         }
 
         [HttpGet]
@@ -59,7 +50,42 @@ namespace OutOfOffice.Server.Controllers
             try
             {
                 var ApprovalRequests = await _context.ApprovalRequests.ToListAsync();
-                return Ok(ApprovalRequests);
+
+                var approvalRequestDetailsModel = ApprovalRequests.Select(ar =>
+                {
+                    var employeeId = _context.LeaveRequests
+                        .Where(lr => lr.Id == ar.LeaveRequestId)
+                        .Select(lr => lr.EmployeeId)
+                        .FirstOrDefault();
+
+                    var employee = _context.Employees
+                        .Where(e => e.Id == employeeId)
+                        .Select(e => new { e.Name, e.Surname })
+                        .FirstOrDefault();
+
+                    return new approvalRequestDetailsModel
+                    {
+                        Id = ar.Id,
+                        ApproverId = ar.ApproverId,
+                        LeaveRequestId = ar.LeaveRequestId,
+                        Status = ar.Status,
+                        Comment = ar.Comment,
+                        EmployeeId = employeeId,
+                        Name = employee.Name,
+                        Surname = employee.Surname,
+                        StartDate = _context.LeaveRequests
+                            .Where(lr => lr.Id == ar.LeaveRequestId)
+                            .Select(lr => lr.StartDate)
+                            .FirstOrDefault(),
+                        EndDate = _context.LeaveRequests
+                            .Where(lr => lr.Id == ar.LeaveRequestId)
+                            .Select(lr => lr.EndDate)
+                            .FirstOrDefault(),
+                    };
+                }).ToList();
+
+
+                return Ok(approvalRequestDetailsModel);
             }
             catch (Exception ex)
             {

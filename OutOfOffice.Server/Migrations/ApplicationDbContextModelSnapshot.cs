@@ -251,9 +251,10 @@ namespace OutOfOffice.Server.Migrations
                     b.Property<int>("LeaveRequestId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RequestStatus")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 

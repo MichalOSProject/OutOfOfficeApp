@@ -5,86 +5,61 @@ import Button from "@mui/material/Button";
 
 const ApprovalRequest = () => {
     const navigate = useNavigate();
-    const [selLR, setSelLR] = useState({});
+    const [selectedAR, setSelectedAR] = useState({});
     const [ARs, setARs] = useState([]);
-    const [data, setData] = useState([]);
-    const [employee, setEmployee] = useState([]);
-    const [error, setError] = useState(null);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
+    function statusDecode(status){
+        switch (status) {
+            case 0:
+                return 'New';
+            case 1:
+                return 'Rejected';
+            case 2:
+                return 'Approved';
+            default:
+                return 'Error Status';
+        }
+    }
+
     useEffect(() => {
-        if (data.length == 0) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('https://localhost:7130/api/employee');
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const result = await response.json();
-                    console.log('Data fetched:', result);
-                    setData(result);
-                } catch (error) {
-                    setError(error);
-                    console.error('Error fetching data:', error);
-                }
-            };
-            fetchData();
-        }
         if (ARs.length == 0) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('https://localhost:7130/api/approvalRequest');
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const result = await response.json();
-                    console.log('Data fetched:', result);
-                    setARs(result);
-                } catch (error) {
-                    setError(error);
-                    console.error('Error fetching data:', error);
+            fetch('https://localhost:7130/api/approvalRequest', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            };
-            fetchData();
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                setARs(data)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
-    }, [data, setARs]);
+    }, [setARs]);
 
     const columns = [
         { field: 'LP', headerName: 'LP' },
         { field: 'id', headerName: 'ID:' },
-        { field: 'approverId', headerName: 'Approver:' },
-        { field: 'approverType', headerName: 'Approver Position:' },
         { field: 'leaveRequestId', headerName: 'Leave Request Id:' },
-        { field: 'requestStatus', headerName: 'Request Status:' },
+        { field: 'employee', headerName: 'Employee:' },
+        { field: 'startDate', headerName: 'Start Date:' },
+        { field: 'endDate', headerName: 'End Date:' },
+        { field: 'status', headerName: 'Status:' },
         { field: 'comment', headerName: 'Comment:' }
     ];
-
-    const employeeInfo = (employeeID) => {
-        const employee = data.find(emplo => emplo.id === employeeID);
-        if (employee) {
-            return employee.name + ' ' + employee.surname;
-        } else {
-            return 'Requires attention';
-        }
-    };
-
-    const employeePostition = (employeeID) => {
-        const employee = data.find(emplo => emplo.id === employeeID);
-        if (employee && (employee.position === 'HR' || employee.position === 'Project Manager')) {
-            return employee.position;
-        } else {
-            return 'Requires attention';
-        }
-    };
 
     const rows = ARs.map((item, index) => ({
         LP: index + 1,
         id: item.id,
-        approverId: employeeInfo(item.approverId),
-        approverType: employeePostition(item.approverId),
         leaveRequestId: item.leaveRequestId,
-        requestStatus: item.requestStatus,
+        employee: item.name + ' ' + item.surname,
+        startDate: item.startDate,
+        endDate: item.endDate,
+        status: statusDecode(item.status),
         comment: item.comment
     }));
 
@@ -95,14 +70,11 @@ const ApprovalRequest = () => {
 
         setSelID(selectedId);
         setSelLineNumber(selectedLineNumber);
-        setSelLR(selectedRow);
-
-        console.log('Selected Approval Request:', selectedRow);
+        setSelectedAR(selectedRow);
     };
 
     const handleEditClick = () => {
-        setEmployee(data.filter(emplo => emplo.id === selID));
-        navigate('/approvalrequests/edit', { state: { selLR, employee } });
+        navigate('/approvalrequests/edit', { state: { selectedAR } });
     };
 
 

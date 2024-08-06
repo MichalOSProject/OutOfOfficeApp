@@ -31,6 +31,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         //    .HasForeignKey(e => e.EmployeePartner)
         //    .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<ApprovalRequest>()
+            .Property(req => req.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
         modelBuilder.Entity<ApplicationUser>().HasDiscriminator<string>("Discriminator").HasValue<ApplicationUser>("ApplicationUser");
 
         base.OnModelCreating(modelBuilder);

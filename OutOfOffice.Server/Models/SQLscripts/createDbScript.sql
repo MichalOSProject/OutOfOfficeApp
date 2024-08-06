@@ -41,7 +41,8 @@ GO
 
 INSERT INTO Employees (Name, Surname, Subdivision, Position, EmployeeStatus, EmployeePartner, FreeDays)
 VALUES ('Administrator', 'Account', 'IT', 'BOSS', 1, 2, 25),
-('System', 'Account', 'System', 'HR', 1, 2, 20);
+('SystemHR', 'Account', 'System', 'HR', 1, 2, 20),
+('SystemPM', 'Account', 'System', 'Project Manager', 1, 2, 20);
 GO
 
 ALTER TABLE [Employees]
@@ -152,7 +153,7 @@ CREATE TABLE [ApprovalRequests] (
     [Id] int NOT NULL IDENTITY,
     [ApproverId] int NOT NULL,
     [LeaveRequestId] int NOT NULL,
-    [RequestStatus] nvarchar(max) NOT NULL,
+    [Status] nvarchar(50) NOT NULL,
     [Comment] nvarchar(max) NULL,
     CONSTRAINT [PK_ApprovalRequests] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_ApprovalRequests_Employees_ApproverId] FOREIGN KEY ([ApproverId]) REFERENCES [Employees] ([Id]) ON DELETE CASCADE,
@@ -215,7 +216,6 @@ GO
 CREATE INDEX [IX_ProjectsDetails_projectId] ON [ProjectsDetails] ([projectId]);
 GO
 
-
 INSERT INTO dbo.AspNetUsers
 (
 id,
@@ -277,11 +277,31 @@ NEWID(),
     NULL,
     1,
     0
+),
+(
+NEWID(),
+    3,
+    1,
+    'ApplicationUser',
+    'PMAdmin',
+    'PMADMIN',
+    NULL,
+    NULL,
+    0,
+    'AQAAAAIAAYagAAAAENYFZ9yYn6SEwbgP3I+pgktO0AejAs2zvBmoL0x3ul9OPYY2hxiQ7ayGRxvhvipbJQ==',
+    '6AQEAC55ZQLGDEMBQ5EZKTSCICASMJSV',
+    '47ea6f66-a76d-4891-bfab-7330c95d7ee3',
+    NULL,
+    0,
+    0,
+    NULL,
+    1,
+    0
 );
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20240731150633_InitialMigration', N'8.0.7');
+VALUES (N'20240802144309_InitialMigration', N'8.0.7');
 GO
 
 COMMIT;

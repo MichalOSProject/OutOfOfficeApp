@@ -60,7 +60,7 @@ const LeaveRequestsEdit = () => {
             },
             body: JSON.stringify(formData)
         }).then(response => {
-            return response.json();
+            return response.text();
         }).then(data => {
             console.log('Success:', data);
             setAlertMessage(isAddMode ? 'Leave Request added successfully' : 'Leave Request update successfully');

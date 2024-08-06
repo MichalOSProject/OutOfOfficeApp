@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OutOfOffice.Server.Models;
 using OutOfOffice.Server.Models.SQLmodels;
 
 namespace OutOfOffice.Server.Controllers
@@ -24,6 +25,49 @@ namespace OutOfOffice.Server.Controllers
             }
 
             _context.LeaveRequests.Add(requestData);
+            await _context.SaveChangesAsync();
+
+            var hrManager = _context.Employees
+                .Where(item => item.Id == requestData.EmployeeId)
+                .Select(item => item.EmployeePartner)
+                .FirstOrDefault();
+
+            var newHRApprovalRequest = new ApprovalRequest
+            {
+                ApproverId = hrManager,
+                LeaveRequestId = requestData.Id,
+                Status = RequestStatus.New,
+                Comment = null
+            };
+
+            _context.ApprovalRequests.Add(newHRApprovalRequest);
+
+            var projects = await _context.ProjectsDetails
+                .Where(item => item.employeeId == requestData.EmployeeId)
+                .Select(item => item.projectId).
+                ToArrayAsync();
+
+            if (projects == null)
+            {
+                return Ok("No projects Manager included");
+            }
+
+            var projectManagers = await _context.Projects
+                .Where(item => projects.Contains(item.Id) && item.ProjectStatus == true)
+                .Select(item => item.ManagerId)
+                .ToArrayAsync();
+
+            foreach (int idManager in projectManagers)
+            {
+                var newPMsApprovalRequest = new ApprovalRequest
+                {
+                    ApproverId = idManager,
+                    LeaveRequestId = requestData.Id,
+                    Status = RequestStatus.New,
+                    Comment = null
+                };
+                _context.ApprovalRequests.Add(newPMsApprovalRequest);
+            }
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Leave Request added successfully" });

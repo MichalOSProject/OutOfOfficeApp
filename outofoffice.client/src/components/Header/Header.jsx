@@ -29,7 +29,7 @@ function Header() {
                     justifyContent: "space-between",
                 }} >
             <Link to="/login"><Button variant="contained" onClick={handleLogoutClick} style={{ background: 'darkgray' }}>Logout</Button></Link>
-                <div>{'Logged-in ID: ' + decodedToken.id}<br />{' Position: ' + decodedToken.position}</div>
+                <div>{'Logged-in ID: ' + decodedToken.id}<br />{' Position: ' + decodedToken.position}<br />{' Free Days: ' + decodedToken.freeDays}</div>
             </div>
         </div>
     );

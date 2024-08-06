@@ -91,7 +91,6 @@ const ProjectsEdit = () => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
-        console.log('PM1: ',PM)
         const formData = getValues();
         if (isAddMode) {
             formData.members = newMembersList
@@ -102,7 +101,6 @@ const ProjectsEdit = () => {
         formData.managerId = parseInt(formData.managerId);
         formData.startDate = dayjs(startDate).format('YYYY-MM-DD');
         formData.endDate = dayjs(endDate).format('YYYY-MM-DD');
-        console.log(formData)
 
         fetch(isAddMode ? 'https://localhost:7130/api/project/add' : 'https://localhost:7130/api/project/edit', {
             method: 'POST',
@@ -124,7 +122,6 @@ const ProjectsEdit = () => {
             setAlertTitle('error');
             setOpenAlert(true);
         });
-        console.log('PM2: ', PM)
     };
 
     const handleRowSelection = (newSelection) => {
@@ -164,7 +161,7 @@ const ProjectsEdit = () => {
         }).then(response => {
             return response.text();
         }).then(data => {
-            console.log('Success:', data);
+            console.log('Success: ',data.message);
         }).catch(error => {
             console.error('Error:', error);
         });
@@ -280,7 +277,7 @@ const ProjectsEdit = () => {
                 </Select>
             </FormControl>
             {!isAddMode && (<Button variant="contained" onClick={handleAddMembersClick} disabled={newMembersList.length == 0}>Add members</Button>)}
-            <DataGrid
+            {!isAddMode && (<DataGrid
                 tablesort
                 rows={rows}
                 columns={columns}
@@ -293,11 +290,11 @@ const ProjectsEdit = () => {
                     },
                 }}
                 pageSizeOptions={[5, 10, 15]}
-            />
+            />)}
             {isAddMode && (
-                <Button type="submit" variant="contained" color="primary" onClick={onSubmit}>
+                <h2><Button type="submit" variant="contained" color="primary" onClick={onSubmit}>
                     Add Project
-                </Button>)}
+                </Button></h2>)}
             {!isAddMode && (<Button variant="contained" onClick={handleDeleteMembersClick} disabled={selectedProjectMembers.length == 0}>Delete members</Button>)}
             <Alert
                 severity={alertTitle}

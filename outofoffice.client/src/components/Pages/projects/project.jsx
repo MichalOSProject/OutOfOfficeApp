@@ -8,46 +8,40 @@ const Projects = () => {
     const [selProj, setSelProj] = useState({});
     const [projects, setprojects] = useState([]);
     const [PM, setPM] = useState([]);
-    const [error, setError] = useState(null);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
     useEffect(() => {
         if (PM.length == 0) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('https://localhost:7130/api/employee');
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const result = await response.json();
-                    console.log('Data fetched:', result);
-                    const filteredPM = result.filter(emplo => emplo.position === 'Project Manager');
-                    setPM(filteredPM);
-                    console.log('Filtered PM employees:', PM);
-                } catch (error) {
-                    setError(error);
-                    console.error('Error fetching data:', error);
+            fetch('https://localhost:7130/api/employee', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            };
-            fetchData();
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                const filteredPM = data.filter(emplo => emplo.position === 'Project Manager');
+                setPM(filteredPM)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
         if (projects.length == 0) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('https://localhost:7130/api/project');
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const result = await response.json();
-                    console.log('Data fetched:', result);
-                    setprojects(result);
-                } catch (error) {
-                    setError(error);
-                    console.error('Error fetching data:', error);
+            fetch('https://localhost:7130/api/project', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            };
-            fetchData();
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                setprojects(data)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
     }, [PM,projects]);
 
@@ -90,8 +84,6 @@ const Projects = () => {
         setSelID(selectedId);
         setSelLineNumber(selectedLineNumber);
         setSelProj(selectedRow);
-
-        console.log('Selected Project:', selectedRow);
     };
 
     const handleEditClick = () => {

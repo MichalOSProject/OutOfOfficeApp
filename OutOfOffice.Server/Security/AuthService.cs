@@ -27,7 +27,8 @@ public class AuthService
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("position",employee.Position),
                 new Claim("id",user.EmployeeId.ToString()),
-                new Claim("changePassword",user.changePassword.ToString())
+                new Claim("changePassword",user.changePassword.ToString()),
+                new Claim("freeDays", employee.FreeDays.ToString())
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

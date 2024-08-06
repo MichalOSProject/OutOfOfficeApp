@@ -15,8 +15,7 @@ public partial class ApprovalRequest
     [Required]
     public int LeaveRequestId { get; set; }
     [Required]
-    public string RequestStatus { get; set; } = null!;
-
+    public RequestStatus Status { get; set; }
     public string? Comment { get; set; }
 
     ////Keys:
@@ -28,4 +27,10 @@ public partial class ApprovalRequest
     //[ForeignKey("LeaveRequestId")]
     //[JsonIgnore]
     //public LeaveRequest baseRequest { get; set; }
+}
+public enum RequestStatus : int
+{
+    New = 0,
+    Rejected = 1,
+    Approved = 2
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace OutOfOffice.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240731150633_InitialMigration")]
+    [Migration("20240802144309_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -254,9 +254,10 @@ namespace OutOfOffice.Server.Migrations
                     b.Property<int>("LeaveRequestId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RequestStatus")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
