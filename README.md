@@ -11,8 +11,7 @@ Elements requiring completion:
 
 - Restrict controller actions based on access groups.
 - Restrict Front-End access based on permissions stored in tokens.
-- Develop a view for required approvals for Project Managers.
-- Automatically close leave requests once all approvals are obtained.
+- Add redirection after successfully action
 
 For testing the application:
 
