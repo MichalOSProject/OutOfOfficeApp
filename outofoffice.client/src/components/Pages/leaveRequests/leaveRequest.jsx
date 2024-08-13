@@ -7,9 +7,25 @@ const LeaveRequest = () => {
     const navigate = useNavigate();
     const [selLR, setSelLR] = useState({});
     const [LRs, setLRs] = useState([]);
+    const [errorText, setErrorText] = useState(null);
     const [data, setData] = useState([]);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
+
+    function statusDecode(status) {
+        switch (status) {
+            case 0:
+                return 'New';
+            case 1:
+                return 'Rejected';
+            case 2:
+                return 'Approved';
+            case 3:
+                return 'Cancelled';
+            default:
+                return 'Error Status';
+        }
+    }
 
     useEffect(() => {
         if (data.length == 0) {
@@ -20,11 +36,17 @@ const LeaveRequest = () => {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
                 return response.json();
             }).then(data => {
+                setErrorText(null)
                 setData(data)
             }).catch(error => {
-                console.error('Error:', error);
+                setErrorText(error.message)
             });
         }
         if (LRs.length == 0) {
@@ -35,19 +57,25 @@ const LeaveRequest = () => {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
                 return response.json();
             }).then(data => {
+                setErrorText(null)
                 setLRs(data)
             }).catch(error => {
-                console.error('Error:', error);
+                setErrorText(error.message)
             });
         }
     }, [data, setLRs]);
 
     const columns = [
-        { field: 'LP', headerName: 'LP' },
+        { field: 'LP', headerName: 'LP', hide: true },
         { field: 'id', headerName: 'ID:' },
-        { field: 'employeeId', headerName: 'Employee:' },
+        { field: 'employee', headerName: 'Employee:' },
         { field: 'absenceReason', headerName: 'Absence Reason:' },
         { field: 'startDate', headerName: 'Start Date:' },
         { field: 'endDate', headerName: 'End Date:' },
@@ -55,24 +83,15 @@ const LeaveRequest = () => {
         { field: 'requestStatus', headerName: 'Request Status:' },
     ];
 
-    const employeeInfo = (employeeID) => {
-        const employee = data.find(emplo => emplo.id === employeeID);
-        if (employee) {
-            return employee.name + ' ' + employee.surname;
-        } else {
-            return 'Requires attention';
-        }
-    };
-
     const rows = LRs.map((item, index) => ({
         LP: index + 1,
         id: item.id,
-        employeeId: employeeInfo(item.employeeId),
+        employee: item.employee,
         absenceReason: item.absenceReason,
         startDate: item.startDate,
         endDate: item.endDate,
         comment: item.comment,
-        requestStatus: item.requestStatus
+        requestStatus: statusDecode(item.requestStatus)
     }));
 
     const handleRowSelection = (newSelection) => {
@@ -85,14 +104,12 @@ const LeaveRequest = () => {
         setSelLR(selectedRow);
     };
 
-    const handleEditClick = () => {
-        const employee = employeeInfo(selLR.employeeId)
-    navigate('/leaverequests/edit', { state: { selLR, employee } });
+    const handleOpenClick = () => {
+        navigate('/leaverequests/open', { state: selLR });
     };
     const handleAddClick = () => {
         setSelLR(null)
-        const employee = null
-        navigate('/leaverequests/add', { state: { selLR, employee } });
+        navigate('/leaverequests/add', { state: selLR });
     };
 
 
@@ -101,7 +118,8 @@ const LeaveRequest = () => {
             <h1>
                 Leave Request ID: {selID}
             </h1>
-            <Button variant="contained" onClick={handleEditClick} disabled={selLineNumber != 0 ? false : true}>Edit</Button>
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
+            <Button variant="contained" onClick={handleOpenClick} disabled={selLineNumber != 0 ? false : true}>Open</Button>
             <Button variant="contained" onClick={handleAddClick}>Add</Button>
             <div style={{ height: '50%', width: '100%' }}>
                 <DataGrid
@@ -111,6 +129,14 @@ const LeaveRequest = () => {
                     autoHeight
                     onRowSelectionModelChange={(newSelection) => handleRowSelection(newSelection)}
                     initialState={{
+                        sorting: {
+                            sortModel: [{ field: 'id', sort: 'desc' }],
+                        },
+                        columns: {
+                            columnVisibilityModel: {
+                                LP: false
+                            },
+                        },
                         pagination: {
                             paginationModel: { page: 0, pageSize: 15 },
                         },

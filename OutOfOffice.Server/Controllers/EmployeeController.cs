@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OutOfOffice.Server.Models;
+using OutOfOffice.Server.Models.Input;
+using OutOfOffice.Server.Models.Output;
 using OutOfOffice.Server.Models.SQLmodels;
 
 namespace OutOfOffice.Server.Controllers
@@ -25,7 +26,7 @@ namespace OutOfOffice.Server.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult<Employee>> AddEmployee([FromBody] newUser requestData)
+        public async Task<ActionResult<Employee>> AddEmployee([FromBody] userModelInput requestData)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +34,7 @@ namespace OutOfOffice.Server.Controllers
             }
 
             var newEmployee = _mapper.Map<Employee>(requestData);
-            var newLogin = _mapper.Map<registerUser>(requestData);
+            var newLogin = _mapper.Map<registerUserModelInput>(requestData);
 
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -69,7 +70,7 @@ namespace OutOfOffice.Server.Controllers
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return UnprocessableEntity("Internal server error");
             }
         }
 
@@ -103,16 +104,78 @@ namespace OutOfOffice.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<employeeModelOutput>>> GetEmployees()
         {
             try
             {
-                var employees = await _context.Employees.ToListAsync();
+                var employees = _context.Employees
+                    .Select(emplo =>
+                        new employeeModelOutput
+                        {
+                            Id = emplo.Id,
+                            Name = emplo.Name,
+                            Surname = emplo.Surname,
+                            Subdivision = emplo.Subdivision,
+                            Position = emplo.Position,
+                            EmployeeStatus = emplo.EmployeeStatus,
+                            EmployeePartner = _context.Employees
+                                                        .Where(hr => hr.Id == emplo.EmployeePartner)
+                                                        .Select(hr => hr.Name + " " + hr.Surname)
+                                                        .First(),
+                            EmployeePartnerID = emplo.EmployeePartner,
+                            FreeDays = emplo.FreeDays,
+                            Photo = emplo.Photo
+                        }
+                    ).ToList();
                 return Ok(employees);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Download Error: {ex.Message}");
+                return UnprocessableEntity("Internal server error");
+            }
+        }
+        [HttpGet("HRs")]
+        public async Task<ActionResult<IEnumerable<hrsModelOutput>>> GetHRs()
+        {
+            try
+            {
+                var employees = _context.Employees
+                    .Where(emplo => emplo.Position.Equals("HR"))
+                    .Select(emplo =>
+                   new hrsModelOutput
+                   {
+                       Id = emplo.Id,
+                       Name = emplo.Name + " " + emplo.Surname,
+                       Status = emplo.EmployeeStatus
+                   })
+                    .ToList();
+                return Ok(employees);
+            }
+            catch (Exception ex)
+            {
+                return UnprocessableEntity("Internal server error");
+            }
+        }
+        [HttpGet("PMs")]
+        public async Task<ActionResult<IEnumerable<pmsModelOutput>>> GetPMs()
+        {
+            try
+            {
+                var employees = _context.Employees
+                    .Where(emplo => emplo.Position.Equals("Project Manager"))
+                    .Select(emplo =>
+                   new pmsModelOutput
+                   {
+                       Id = emplo.Id,
+                       Name = emplo.Name + " " + emplo.Surname,
+                       Status = emplo.EmployeeStatus
+                   })
+                    .ToList();
+                return Ok(employees);
+            }
+            catch (Exception ex)
+            {
+                return UnprocessableEntity("Internal server error");
             }
         }
 

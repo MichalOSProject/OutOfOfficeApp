@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using OutOfOffice.Server.Models.SQLmodels;
+using OutOfOffice.Server.Services.Implementations;
+using OutOfOffice.Server.Services.Interfaces;
+using Nager.Holiday;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,7 +60,8 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddAutoMapper(typeof(Program));
-
+builder.Services.AddScoped<IWorkdayCalculatorService, WorkdayCalculatorService>();
+builder.Services.AddScoped<HolidayClient>();
 
 var app = builder.Build();
 

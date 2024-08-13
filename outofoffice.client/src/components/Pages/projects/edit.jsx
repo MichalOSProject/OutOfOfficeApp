@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import {
-    Box, TextField, Button, InputLabel, FormControl, Alert, AlertTitle, Select, MenuItem } from '@mui/material';
+    Box, TextField, Button, InputLabel, FormControl, Alert, AlertTitle, Select, MenuItem
+} from '@mui/material';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
-import { useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -11,13 +12,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const ProjectsEdit = () => {
     const location = useLocation();
-    const selProj = location.state?.selProj || {};
-    const PM = location.state?.PM || {};
+    const selProj = location.state || {};
     const { register, getValues, formState: { errors } } = useForm();
+    const [PMs, setPMs] = useState([]);
     const [selID, setSelID] = useState(0);
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
+    const [errorText, setErrorText] = useState(null);
     const isAddMode = location.pathname.includes('/add');
     const [startDate, setStartDate] = useState(dayjs());
     const [endDate, setEndDate] = useState(dayjs());
@@ -35,23 +37,30 @@ const ProjectsEdit = () => {
         if (!isAddMode) {
             setStartDate(dayjs(selProj.startDate))
             setEndDate(dayjs(selProj.endDate))
+            if (projectMembers.length == 0) {
+                fetch('https://localhost:7130/api/Project/projectsMembers', {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(selProj.id)
+                }).then(response => {
+                    if (!response.ok) {
+                        return response.text().then(errorData => {
+                            throw new Error(errorData);
+                        });
+                    }
+                    return response.json();
+                }).then(data => {
+                    setErrorText(null)
+                    setProjectMembers(data)
+                }).catch(error => {
+                    setErrorText(error.message)
+                });
+            }
         }
-        if (projectMembers.length == 0) {
-            fetch('https://localhost:7130/api/Project/projectsMembers', {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ projID: selProj.id })
-            }).then(response => {
-                return response.json();
-            }).then(data => {
-                setProjectMembers(data)
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-        }
+
         if (allUsers.length == 0) {
             fetch('https://localhost:7130/api/employee', {
                 method: 'Get',
@@ -60,14 +69,41 @@ const ProjectsEdit = () => {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
                 return response.json();
             }).then(data => {
+                setErrorText(null)
                 setAllUsers(data)
             }).catch(error => {
-                console.error('Error:', error);
+                setErrorText(error.message)
             });
         }
-    }, []);
+        if (PMs.length == 0) {
+            fetch('https://localhost:7130/api/employee/pms', {
+                method: 'Get',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
+                return response.json();
+            }).then(data => {
+                setErrorText(null)
+                setPMs(data)
+            }).catch(error => {
+                setErrorText(error.message)
+            });
+        }
+    }, [projectMembers, allUsers, PMs]);
 
     const columns = [
         { field: 'LP', headerName: 'LP' },
@@ -110,15 +146,18 @@ const ProjectsEdit = () => {
             },
             body: JSON.stringify(formData)
         }).then(response => {
+            if (!response.ok) {
+                return response.text().then(errorData => {
+                    throw new Error(errorData);
+                });
+            }
             return response.text();
         }).then(data => {
-            console.log('Success:', data.message);
-            setAlertMessage(isAddMode ? 'Project added successfully' : 'Project update successfully');
+            setAlertMessage(data.message);
             setAlertTitle('success');
             setOpenAlert(true);
         }).catch(error => {
-            console.error('Error:', error);
-            setAlertMessage(isAddMode ? 'Failed to add project' : 'Failed to update project');
+            setAlertMessage(error.message);
             setAlertTitle('error');
             setOpenAlert(true);
         });
@@ -137,15 +176,24 @@ const ProjectsEdit = () => {
             },
             body: JSON.stringify({ projID: selID, members: selectedProjectMembers })
         }).then(response => {
+            if (!response.ok) {
+                return response.text().then(errorData => {
+                    throw new Error(errorData);
+                });
+            }
             return response.text();
         }).then(data => {
-            console.log('Success:', data);
+            setAlertMessage(data.message);
+            setAlertTitle('success');
+            setOpenAlert(true);
         }).catch(error => {
-            console.error('Error:', error);
+            setAlertMessage(error.message);
+            setAlertTitle('error');
+            setOpenAlert(true);
         });
         window.location.reload();
     };
-    
+
     const handleChangeMembersList = (e) => {
         setNewMembersList(e.target.value)
     };
@@ -159,11 +207,20 @@ const ProjectsEdit = () => {
             },
             body: JSON.stringify({ projID: selID, members: newMembersList })
         }).then(response => {
+            if (!response.ok) {
+                return response.text().then(errorData => {
+                    throw new Error(errorData);
+                });
+            }
             return response.text();
         }).then(data => {
-            console.log('Success: ',data.message);
+            setAlertMessage(data.message);
+            setAlertTitle('success');
+            setOpenAlert(true);
         }).catch(error => {
-            console.error('Error:', error);
+            setAlertMessage(error.message);
+            setAlertTitle('error');
+            setOpenAlert(true);
         });
         window.location.reload();
     };
@@ -171,6 +228,7 @@ const ProjectsEdit = () => {
     return (
         <div>
             <h1>{isAddMode ? 'Add New Project' : 'Project ID: ' + selID}</h1>
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Box
                 component="form"
                 sx={{
@@ -224,8 +282,8 @@ const ProjectsEdit = () => {
                         error={!!errors.managerId}
                         helpertext={errors.managerId ? 'Project Manager is required' : ''}
                     >
-                        {Array.isArray(PM) && PM.map((model, index) => (
-                                <MenuItem key={index} value={model.id} disabled={!model.employeeStatus}>{model.name + ' ' + model.surname}</MenuItem>
+                        {PMs.map((model, index) => (
+                            <MenuItem key={index} value={model.id} disabled={model.Status}>{model.name}</MenuItem>
                         ))
                         }
                     </Select>
@@ -255,12 +313,12 @@ const ProjectsEdit = () => {
                 <br />
                 {!isAddMode && (
                     <Button type="submit" variant="contained" color="primary" onClick={onSubmit}>
-                Confirm
+                        Confirm
                     </Button>)}
             </Box>
             <h2>Project Members:</h2>
             <FormControl sx={{ m: 1, minWidth: 200 }} required={!isAddMode}>
-                <InputLabel id="newMembers-label">{isAddMode ? 'Select Members' :'Add new Members'}</InputLabel>
+                <InputLabel id="newMembers-label">{isAddMode ? 'Select Members' : 'Add new Members'}</InputLabel>
                 <Select
                     labelId="newMembers-label"
                     label="New members"
@@ -285,6 +343,11 @@ const ProjectsEdit = () => {
                 checkboxSelection
                 onRowSelectionModelChange={(newSelection) => handleRowSelection(newSelection)}
                 initialState={{
+                    columns: {
+                        columnVisibilityModel: {
+                            LP: false
+                        },
+                    },
                     pagination: {
                         paginationModel: { page: 0, pageSize: 15 },
                     },

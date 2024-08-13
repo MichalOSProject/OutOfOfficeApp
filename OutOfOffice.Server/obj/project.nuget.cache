@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "0+wMV0bEb4g=",
+  "dgSpecHash": "qec52dcJoFY=",
   "success": true,
   "projectFilePath": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\OutOfOffice.Server.csproj",
   "expectedPackageFiles": [
@@ -73,6 +73,7 @@
     "C:\\Users\\Mosic\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\Mosic\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
     "C:\\Users\\Mosic\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\Mosic\\.nuget\\packages\\nager.holiday\\1.0.1\\nager.holiday.1.0.1.nupkg.sha512",
     "C:\\Users\\Mosic\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
     "C:\\Users\\Mosic\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
     "C:\\Users\\Mosic\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",

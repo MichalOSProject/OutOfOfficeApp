@@ -440,3 +440,4 @@ C:\Users\Mosic\Source\Repos\MichalOSProject\OutOfOfficeApp\OutOfOffice.Server\ob
 C:\Users\Mosic\Source\Repos\MichalOSProject\OutOfOfficeApp\OutOfOffice.Server\obj\Debug\net8.0\OutOfOffice.Server.pdb
 C:\Users\Mosic\Source\Repos\MichalOSProject\OutOfOfficeApp\OutOfOffice.Server\obj\Debug\net8.0\OutOfOffice.Server.genruntimeconfig.cache
 C:\Users\Mosic\Source\Repos\MichalOSProject\OutOfOfficeApp\OutOfOffice.Server\obj\Debug\net8.0\ref\OutOfOffice.Server.dll
+C:\Users\Mosic\source\repos\MichalOSProject\OutOfOfficeApp\OutOfOffice.Server\bin\Debug\net8.0\Nager.Holiday.dll

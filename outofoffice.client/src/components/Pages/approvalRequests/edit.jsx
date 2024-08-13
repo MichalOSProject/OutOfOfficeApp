@@ -41,15 +41,18 @@ const EmployeesEdit = () => {
             },
             body: JSON.stringify(formData)
         }).then(response => {
+            if (!response.ok) {
+                return response.text().then(errorData => {
+                    throw new Error(errorData);
+                });
+            }
             return response.text();
         }).then(data => {
-            console.log('Success:', data);
-            setAlertMessage('Request update successfully');
+            setAlertMessage(data.message);
             setAlertTitle('success');
             setOpenAlert(true);
         }).catch(error => {
-            console.error('Error:', error);
-            setAlertMessage('Failed to update request');
+            setAlertMessage(error.message);
             setAlertTitle('error');
             setOpenAlert(true);
         });

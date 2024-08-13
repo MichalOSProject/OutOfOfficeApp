@@ -36,6 +36,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasConversion<string>()
             .HasMaxLength(50);
 
+        modelBuilder.Entity<LeaveRequest>()
+            .Property(req => req.RequestStatus)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
         modelBuilder.Entity<ApplicationUser>().HasDiscriminator<string>("Discriminator").HasValue<ApplicationUser>("ApplicationUser");
 
         base.OnModelCreating(modelBuilder);

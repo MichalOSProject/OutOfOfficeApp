@@ -7,27 +7,11 @@ const Projects = () => {
     const navigate = useNavigate();
     const [selProj, setSelProj] = useState({});
     const [projects, setprojects] = useState([]);
-    const [PM, setPM] = useState([]);
     const [selID, setSelID] = useState(0);
+    const [errorText, setErrorText] = useState(null);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
     useEffect(() => {
-        if (PM.length == 0) {
-            fetch('https://localhost:7130/api/employee', {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                return response.json();
-            }).then(data => {
-                const filteredPM = data.filter(emplo => emplo.position === 'Project Manager');
-                setPM(filteredPM)
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-        }
         if (projects.length == 0) {
             fetch('https://localhost:7130/api/project', {
                 method: 'GET',
@@ -36,14 +20,20 @@ const Projects = () => {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
                 return response.json();
             }).then(data => {
+                setErrorText(null)
                 setprojects(data)
             }).catch(error => {
-                console.error('Error:', error);
+                setErrorText(error.message)
             });
         }
-    }, [PM,projects]);
+    }, [projects]);
 
     const columns = [
         { field: 'LP', headerName: 'LP' },
@@ -51,19 +41,11 @@ const Projects = () => {
         { field: 'projectType', headerName: 'Project Type:' },
         { field: 'startDate', headerName: 'Start Date:' },
         { field: 'endDate', headerName: 'End Date:' },
-        { field: 'managerId', headerName: 'Project Manager:' },
+        { field: 'manager', headerName: 'Project Manager:' },
+        { field: 'managerId', headerName: 'Project Manager ID:' },
         { field: 'comment', headerName: 'Comment:' },
         { field: 'projectStatus', headerName: 'Project Status:' },
     ];
-
-    const managerInfo = (managerID) => {
-        const manager = PM.find(PM => PM.id === managerID);
-        if (manager) {
-            return manager.name + ' ' + manager.surname;
-        } else {
-            return 'Requires attention';
-        }
-    };
 
     const rows = projects.map((item, index) => ({
         LP: index + 1,
@@ -71,7 +53,8 @@ const Projects = () => {
         projectType: item.projectType,
         startDate: item.startDate,
         endDate: item.endDate,
-        managerId: managerInfo(item.managerId),
+        manager: item.manager,
+        managerId: item.managerId,
         comment: item.comment,
         projectStatus: item.projectStatus ? 'Active' : 'Inactive'
     }));
@@ -87,11 +70,11 @@ const Projects = () => {
     };
 
     const handleEditClick = () => {
-        navigate('/projects/edit', { state: { selProj, PM } });
+        navigate('/projects/edit', { state: selProj });
     };
     const handleAddClick = () => {
         setSelProj(null)
-        navigate('/projects/add', { state: { selProj, PM } });
+        navigate('/projects/add', { state: selProj });
     };
 
 
@@ -100,6 +83,7 @@ const Projects = () => {
             <h1>
                 Project ID: {selID}
             </h1>
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Button variant="contained" onClick={handleEditClick} disabled={selLineNumber != 0 ? false : true}>Edit</Button>
             <Button variant="contained" onClick={handleAddClick}>Add</Button>
             <div style={{ height: '50%', width: '100%' }}>
@@ -110,6 +94,15 @@ const Projects = () => {
                     autoHeight
                     onRowSelectionModelChange={(newSelection) => handleRowSelection(newSelection)}
                     initialState={{
+                        sorting: {
+                            sortModel: [{ field: 'id', sort: 'desc' }],
+                        },
+                        columns: {
+                            columnVisibilityModel: {
+                                LP: false,
+                                managerId: false
+                            },
+                        },
                         pagination: {
                             paginationModel: { page: 0, pageSize: 15 },
                         },

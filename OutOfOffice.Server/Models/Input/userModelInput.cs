@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OutOfOffice.Server.Models;
+namespace OutOfOffice.Server.Models.Input;
 
-public partial class newUser
+public partial class userModelInput
 {
     [Required]
     public int Id { get; set; }

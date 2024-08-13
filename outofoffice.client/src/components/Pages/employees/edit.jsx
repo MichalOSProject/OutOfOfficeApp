@@ -6,11 +6,12 @@ import { jwtDecode } from "jwt-decode";
 
 const EmployeesEdit = () => {
     const location = useLocation();
-    const data = location.state?.selEmplo || {};
-    const HR = location.state?.HR || {};
+    const data = location.state || {};
+    const [HR, setHR] = useState([]);
     const { register, handleSubmit, getValues, formState: { errors } } = useForm();
     const [selID, setSelID] = useState(0);
     const [openAlert, setOpenAlert] = useState(false);
+    const [errorText, setErrorText] = useState(null);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const navigate = useNavigate();
@@ -38,24 +39,54 @@ const EmployeesEdit = () => {
         setSelID(data.id)
         isAddMode ? setisEnablePasswordChange(true) : null;
         isHrMode() ? null : navigate('/403',);
-        if (isAdminMode()) {
-            fetch('https://localhost:7130/api/account/username', {
-                method: 'POST',
+
+        if (HR.length == 0) {
+            fetch('https://localhost:7130/api/employee/hrs', {
+                method: 'GET',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: data.id })
+                }
             }).then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
                 }
-                return response.text();
+                return response.json();
             }).then(data => {
-                setUsername(data)
-            })
+                setErrorText(null)
+                setHR(data)
+            }).catch(error => {
+                setErrorText(error.message)
+            });
         }
-    }, []);
+
+        if (username == null) {
+            if (isAdminMode() && !isAddMode) {
+                fetch('https://localhost:7130/api/account/username', {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data.id)
+                }).then(response => {
+                    if (!response.ok) {
+                        return response.text().then(errorData => {
+                            throw new Error(errorData);
+                        });
+                    }
+                    return response.text();
+                }).then(data => {
+                    setErrorText(null)
+                    setUsername(data)
+                }).catch(error => {
+                    setErrorText(error.message)
+                });
+            }
+        }
+    }, [HR,username]);
 
     const onSubmit = async () => {
         const registerData = getValues();
@@ -102,17 +133,17 @@ const EmployeesEdit = () => {
             body: JSON.stringify(isAddMode ? registerData : userData)
         }).then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                return response.text().then(errorData => {
+                    throw new Error(errorData);
+                });
             }
             return response.text();
         }).then(data => {
-            console.log('Response: ', data);
-            setAlertMessage(isAddMode ? 'Employee added successfully' : 'Employee update successfully');
+            setAlertMessage(data.message);
             setAlertTitle('success');
             setOpenAlert(true);
         }).catch(error => {
-            console.error('Error:', error);
-            setAlertMessage(isAddMode ? 'Failed to add employee' : 'Failed to update employee');
+            setAlertMessage(error.message);
             setAlertTitle('error');
             setOpenAlert(true);
         });
@@ -129,14 +160,16 @@ const EmployeesEdit = () => {
                 body: JSON.stringify(logonData)
             }).then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
                 }
                 return response.text();
             }).then(data => {
+                setErrorText(null)
                 setUsername(data)
-                console.log('Response: ', data);
             }).catch(error => {
-                console.error('Error:', error);
+                setErrorText(error.message)
             });
         }
     };
@@ -156,6 +189,7 @@ const EmployeesEdit = () => {
     return (
         <div>
             <h1>{isAddMode ? 'Add New Employee' : 'Employee ID: ' + selID}</h1>
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Box
                 component="form"
                 sx={{
@@ -197,7 +231,7 @@ const EmployeesEdit = () => {
                     required
                     name="position"
                     label="Employee Position"
-                    defaultValue={ data.position}
+                    defaultValue={data.position}
                     {...register("position", { required: true })}
                     error={!!errors.position}
                     helpertext={errors.position ? 'Position is required' : ''}
@@ -219,7 +253,7 @@ const EmployeesEdit = () => {
                     </Select>
                 </FormControl>)}
                 <b>Individual option? <Checkbox checked={newPosition} onChange={handleChangeIndividualOption} /></b>
-                <br/>
+                <br />
                 <FormControl sx={{ m: 1, minWidth: 200 }} required>
                     <InputLabel id="employeeStatus-label">Employee Status</InputLabel>
                     <Select
@@ -240,7 +274,7 @@ const EmployeesEdit = () => {
                     <InputLabel id="employeePartner-label">Employee Partner</InputLabel>
                     <Select
                         labelId="employeePartner-label"
-                        defaultValue={data.employeePartner}
+                        defaultValue={data.employeePartnerID}
                         label="Employee Partner"
                         autoWidth
                         name="employeePartner"
@@ -250,7 +284,7 @@ const EmployeesEdit = () => {
                         helpertext={errors.employeePartner ? 'Employee Partner is required' : ''}
                     >
                         {HR.map((model, index) => (
-                            <MenuItem key={index} value={model.id} disabled={!model.employeeStatus}>{model.name + ' ' + model.surname}</MenuItem>
+                            <MenuItem key={index} value={model.id} disabled={model.Status}>{model.name}</MenuItem>
                         ))
                         }
                     </Select>
@@ -271,13 +305,13 @@ const EmployeesEdit = () => {
                     defaultValue={data.photo}
                     {...register("photo", { required: false })}
                 />
-                {(isAdminMode() && !isAddMode )&& (
+                {(isAdminMode() && !isAddMode) && (
                     <Box>
                         <br />
                         <h2>Edit Logon Data? <Checkbox checked={isEnableAdminMode} onChange={handleChangeAdminMode} /></h2>
                     </Box>
                 )}
-                {( (isAdminMode() && isEnableAdminMode) || isAddMode) && (
+                {((isAdminMode() && isEnableAdminMode) || isAddMode) && (
                     <Box>
                         <h2>Only for adding a new user or for administrators</h2>
 
@@ -295,7 +329,7 @@ const EmployeesEdit = () => {
                             name="password"
                             label="Password"
                             type="password"
-                            disabled={!isEnablePasswordChange }
+                            disabled={!isEnablePasswordChange}
                             {...register("password", { required: isEnablePasswordChange })}
                             error={!!errors.password}
                             helpertext={errors.password ? 'Password is required' : ''}

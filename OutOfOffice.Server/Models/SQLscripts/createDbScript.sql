@@ -91,7 +91,7 @@ CREATE TABLE [LeaveRequests] (
     [StartDate] date NOT NULL,
     [EndDate] date NOT NULL,
     [Comment] nvarchar(max) NULL,
-    [RequestStatus] nvarchar(max) NOT NULL,
+    [RequestStatus] nvarchar(50) NOT NULL,
     CONSTRAINT [PK_LeaveRequests] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_LeaveRequests_Employees_EmployeeId] FOREIGN KEY ([EmployeeId]) REFERENCES [Employees] ([Id]) ON DELETE CASCADE
 );
@@ -301,7 +301,7 @@ NEWID(),
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20240802144309_InitialMigration', N'8.0.7');
+VALUES (N'20240812185154_InitialMigration', N'8.0.7');
 GO
 
 COMMIT;

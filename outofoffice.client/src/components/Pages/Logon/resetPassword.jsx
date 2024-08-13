@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 const ResetPasswordPage = () => {
     const { register, handleSubmit, getValues, formState: { errors } } = useForm();
     const navigate = useNavigate();
+    const [errorText, setErrorText] = useState(null);
     const [isCorrectStatus, setIsCorrectStatus] = useState();
     const isCorrect = () => {
         const formData = getValues();
@@ -38,17 +39,19 @@ const ResetPasswordPage = () => {
                 },
                 body: JSON.stringify(loginData)
             }).then(response => {
-                if (response.ok) {
-                    return response.json();
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
                 }
-                throw new Error('Something went wrong');
+                return response.json();
             }).then(data => {
                 const { token } = data;
                 localStorage.setItem('token', token);
-                console.log('Success:');
+                setErrorText(null)
                 navigate('/',);
             }).catch(error => {
-                console.error('Error:', error);
+                setErrorText(error.message)
             });
         }
     };
@@ -65,6 +68,7 @@ const ResetPasswordPage = () => {
             }}
         >
             <h1>Change your Password </h1>
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <h2 style={{ color: 'red' }}>{isCorrectStatus === false ? 'The passwords entered are not the same!' : ''}</h2>
             <Box
                 component="form"

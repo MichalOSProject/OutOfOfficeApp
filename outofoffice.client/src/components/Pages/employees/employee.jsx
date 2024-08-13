@@ -7,7 +7,7 @@ const Employees = () => {
     const navigate = useNavigate();
     const [selEmplo, setselEmplo] = useState({});
     const [data, setData] = useState([]);
-    const [HR, setHR] = useState([]);
+    const [errorText, setErrorText] = useState(null);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
@@ -20,13 +20,17 @@ const Employees = () => {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
                 return response.json();
             }).then(data => {
-                const filteredHR = data.filter(emplo => emplo.position === 'HR');
-                setHR(filteredHR);
+                setErrorText(null)
                 setData(data)
             }).catch(error => {
-                console.error('Error:', error);
+                setErrorText(error.message)
             });
         }
 
@@ -41,17 +45,9 @@ const Employees = () => {
         { field: 'position', headerName: 'Position:' },
         { field: 'employeeStatus', headerName: 'Status:' },
         { field: 'employeePartner', headerName: 'Employee Partner:' },
+        { field: 'employeePartnerId', headerName: 'Employee Partner ID:' },
         { field: 'freeDays', headerName: 'Free Days:' },
     ];
-
-    const hrInfo = (hrID) => {
-        const hr = HR.find(HRs => HRs.id === hrID);
-        if (hr) {
-            return hr.name + ' ' + hr.surname;
-        } else {
-            return 'Requires attention';
-        }
-    };
 
     const rows = data.map((item, index) => ({
         LP: index + 1,
@@ -61,7 +57,8 @@ const Employees = () => {
         position: item.position,
         subdivision: item.subdivision,
         employeeStatus: item.employeeStatus ? 'Active':'Inactive',
-        employeePartner: hrInfo(item.employeePartner),
+        employeePartner: item.employeePartner,
+        employeePartnerId: item.employeePartnerID,
         freeDays: item.freeDays,
     }));
 
@@ -76,11 +73,11 @@ const Employees = () => {
     };
 
     const handleEditClick = () => {
-        navigate('/employees/edit', { state: { selEmplo, HR } });
+        navigate('/employees/edit', { state: selEmplo });
     };
     const handleAddClick = () => {
         setselEmplo(null)
-        navigate('/employees/add', { state: { selEmplo, HR } });
+        navigate('/employees/add', { state: selEmplo });
     };
 
 
@@ -89,6 +86,7 @@ const Employees = () => {
             <h1>
                 Employee ID: {selID}
             </h1>
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Button variant="contained" onClick={handleEditClick} disabled={selLineNumber != 0 ? false : true}>Edit</Button>
             <Button variant="contained" onClick={handleAddClick}>Add</Button>
             <div style={{ height: '50%', width: '100%' }}>
@@ -99,6 +97,15 @@ const Employees = () => {
                     autoHeight
                     onRowSelectionModelChange={(newSelection) => handleRowSelection(newSelection)}
                     initialState={{
+                        sorting: {
+                            sortModel: [{ field: 'id', sort: 'desc' }],
+                        },
+                        columns: {
+                            columnVisibilityModel: {
+                                LP: false,
+                                employeePartnerId: false
+                            },
+                        },
                         pagination: {
                             paginationModel: { page: 0, pageSize: 15 },
                         },

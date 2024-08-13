@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OutOfOffice.Server.Models;
+namespace OutOfOffice.Server.Models.Input;
 
-public partial class newProject
+public partial class projectModelInput
 {
     [Required]
     public int Id { get; set; }

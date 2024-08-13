@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, TextField, Button, Alert, AlertTitle } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
+import { DataGrid } from '@mui/x-data-grid';
 import { useLocation } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,73 +11,150 @@ import { jwtDecode } from "jwt-decode";
 
 const LeaveRequestsEdit = () => {
     const location = useLocation();
-    const selLR = location.state?.selLR || {};
-    const employee = location.state?.employee || {};
+    const selLR = location.state || {};
     const { register, handleSubmit, getValues, formState: { errors } } = useForm();
-    const [selID, setSelID] = useState(0);
+    const [selID, setSelID] = useState(null);
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
+    const [errorText, setErrorText] = useState(null);
     const isAddMode = location.pathname.includes('/add');
     const [startDate, setStartDate] = useState(dayjs());
     const [endDate, setEndDate] = useState(dayjs());
+    const [approverDetails, setApproverDetails] = useState([]);
 
     const handleAlertClose = () => {
         setOpenAlert(false);
     };
+
+    function statusDecode(status) {
+        switch (status) {
+            case 0:
+                return 'New';
+            case 1:
+                return 'Rejected';
+            case 2:
+                return 'Approved';
+            case 3:
+                return 'Cancelled';
+            default:
+                return 'Error Status';
+        }
+    }
 
     useEffect(() => {
         setSelID(selLR.id)
         if (!isAddMode) {
             setStartDate(dayjs(selLR.startDate))
             setEndDate(dayjs(selLR.endDate))
+            if (approverDetails.length == 0) {
+                fetch('https://localhost:7130/api/approvalrequest/approveStatus', {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(selLR.id)
+                }).then(response => {
+                    if (!response.ok) {
+                        return response.text().then(errorData => {
+                            throw new Error(errorData);
+                        });
+                    }
+                    return response.json();
+                }).then(data => {
+                    setErrorText(null)
+                    setApproverDetails(data)
+                }).catch(error => {
+                    setErrorText(error.message)
+                });
+            }
         }
-    }, []);
+    }, [approverDetails]);
+
+    const columns = [
+        { field: 'id', headerName: 'ID:' },
+        { field: 'approver', headerName: 'Approver:' },
+        { field: 'status', headerName: 'Status:' },
+        { field: 'comment', headerName: 'Comment:' }
+    ];
+
+    const rows = approverDetails.map((item) => ({
+        id: item.id,
+        approver: item.approver,
+        status: statusDecode(item.status),
+        comment: item.comment == null ? "No comment" : item.comment
+    }));
 
     const onSubmit = async () => {
-        const formData = getValues();
 
         if (isAddMode) {
+            const formData = getValues();
             const decodedToken = jwtDecode(localStorage.getItem('token'));
             formData.EmployeeId = parseInt(decodedToken.id)
-            formData.requestStatus = "New Request"
-        } else {
-            formData.ID = parseInt(selID)
-            formData.EmployeeId = parseInt(selLR.employeeId)
-        }
-        formData.startDate = dayjs(startDate).format('YYYY-MM-DD');
-        formData.endDate = dayjs(endDate).format('YYYY-MM-DD');
-        var formattedData = new FormData();
-        for (const key in formData) {
-            formattedData.append(key, formData[key]);
-        }
-        console.log(formData)
+            formData.RequestStatus = 0
+            formData.startDate = dayjs(startDate).format('YYYY-MM-DD');
+            formData.endDate = dayjs(endDate).format('YYYY-MM-DD');
 
-        fetch(isAddMode ? 'https://localhost:7130/api/leaverequest/add' : 'https://localhost:7130/api/leaverequest/edit', {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        }).then(response => {
-            return response.text();
-        }).then(data => {
-            console.log('Success:', data);
-            setAlertMessage(isAddMode ? 'Leave Request added successfully' : 'Leave Request update successfully');
-            setAlertTitle('success');
-            setOpenAlert(true);
-        }).catch(error => {
-            console.error('Error:', error);
-            setAlertMessage(isAddMode ? 'Failed to add Leave Request' : 'Failed to update Leave Request');
-            setAlertTitle('error');
-            setOpenAlert(true);
-        });
+            fetch('https://localhost:7130/api/leaverequest/add', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
+                return response.text();
+            }).then(data => {
+                setAlertMessage(data.message);
+                setAlertTitle('success');
+                setOpenAlert(true);
+            }).catch(error => {
+                setAlertMessage(error.message);
+                setAlertTitle('error');
+                setOpenAlert(true);
+            });
+        }
     };
+
+    const handleCancelRequest = () => {
+        if (!isAddMode) {
+            fetch('https://localhost:7130/api/leaverequest/cancel', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selID)
+            }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
+                return response.text();
+            }).then(data => {
+                setAlertMessage(data.message);
+                setAlertTitle('success');
+                setOpenAlert(true);
+            }).catch(error => {
+                setAlertMessage(error.message);
+                setAlertTitle('error');
+                setOpenAlert(true);
+            });
+        }
+    };
+
     return (
         <div>
             <h1>{isAddMode ? 'Add New Leave Request' : 'Leave Request ID: ' + selID}</h1>
-            {!isAddMode && (<h1>Employee: {employee}</h1>)}
+            {!isAddMode && (<h1>Employee: {selLR.employee}</h1>)}
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Box
                 component="form"
                 sx={{
@@ -87,27 +165,31 @@ const LeaveRequestsEdit = () => {
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <TextField
-                    required
+                    required={isAddMode }
                     name="absenceReason"
                     label="Absence Reason"
                     defaultValue={selLR.absenceReason}
                     {...register("absenceReason", { required: true })}
                     error={!!errors.absenceReason}
                     helpertext={errors.absenceReason ? 'Absence Reason is required' : ''}
+                    InputProps={{
+                        readOnly: !isAddMode,
+                    }}
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                        required
+                        required={isAddMode}
                         name="startDate"
                         label="Start Date"
                         value={startDate}
                         onChange={(newValue) => {
                             setStartDate(newValue)
                         }}
+                        readOnly={!isAddMode}
                         disablePast={isAddMode}
                     />
                     <DatePicker
-                        required
+                        required={isAddMode}
                         name="endDate"
                         label="End Date"
                         value={endDate}
@@ -116,6 +198,7 @@ const LeaveRequestsEdit = () => {
                         onChange={(newValue) => {
                             setEndDate(newValue)
                         }}
+                        readOnly={!isAddMode}
                     />
                 </LocalizationProvider>
                 <TextField
@@ -123,30 +206,54 @@ const LeaveRequestsEdit = () => {
                     label="Comment"
                     defaultValue={selLR.comment}
                     {...register("comment", { required: false })}
+                    InputProps={{
+                        readOnly: !isAddMode,
+                    }}
                 />
                 {!isAddMode && (
                     <TextField
-                        name="requestStatus"
+                        name="RequestStatus"
                         label="Request Status - Read Only"
                         defaultValue={selLR.requestStatus}
-                        {...register("requestStatus", { required: false })}
+                        {...register("RequestStatus", { required: false })}
                         InputProps={{
                             readOnly: true,
                         }}
                     />
                 )}
-                <Button type="submit" variant="contained" color="primary">
-                    {isAddMode ? 'Add' : 'Confirm'}
-                </Button>
+                <br/>
+                {isAddMode && (
+                    <Button type="submit" variant="contained" color="primary">
+                        Add
+                    </Button>
+                )}
+                {!isAddMode && (
+                    <Button onClick={handleCancelRequest} variant="contained" color="primary" style={{ background: 'red' }}>
+                        Cancel Request
+                    </Button>
+                )}
             </Box>
             <Alert
-                severity={alertTitle}false
+                severity={alertTitle}
                 onClose={handleAlertClose}
                 sx={{ mt: 2, display: openAlert ? 'block' : 'none' }}
             >
                 <AlertTitle>{alertTitle == 'error' ? 'Error' : 'Success'}</AlertTitle>
                 {alertMessage}
             </Alert>
+            {!isAddMode && approverDetails && (
+                <DataGrid
+                    tablesort
+                    rows={rows}
+                    columns={columns}
+                    autoHeight
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 15 },
+                        },
+                    }}
+                    pageSizeOptions={[5, 10, 15]}
+                />)}
         </div>
     );
 };

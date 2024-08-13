@@ -336,7 +336,8 @@ namespace OutOfOffice.Server.Migrations
 
                     b.Property<string>("RequestStatus")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");

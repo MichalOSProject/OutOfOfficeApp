@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.Server.Models.SQLmodels;
 
-namespace OutOfOffice.Server.Models
+namespace OutOfOffice.Server.Models.Input
 {
-    public class updateRequestModel
+    public class updateApprovalRequestModelInput
     {
         public int id { get; set; }
         public RequestStatus status { get; set; }

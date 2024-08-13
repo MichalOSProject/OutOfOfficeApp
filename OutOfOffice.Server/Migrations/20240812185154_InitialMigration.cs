@@ -117,7 +117,7 @@ namespace OutOfOffice.Server.Migrations
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RequestStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RequestStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {

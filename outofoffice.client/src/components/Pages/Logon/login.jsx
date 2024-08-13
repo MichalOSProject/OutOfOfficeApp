@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
     const { register, handleSubmit, getValues, formState: { errors } } = useForm();
     const navigate = useNavigate();
-    const [isCorrect, setIsCorrect] = useState(true);
+    const [errorText,setErrorText]  = useState(null);
 
     const onSubmit = async () => {
         const loginData = getValues();
@@ -19,18 +19,19 @@ const Login = () => {
             },
             body: JSON.stringify(loginData)
         }).then(response => {
-            if (response.ok) {
-                return response.json();
+            if (!response.ok) {
+                return response.text().then(errorData => {
+                    throw new Error(errorData);
+                });
             }
-            setIsCorrect(false)
-            throw new Error('Something went wrong', response.message);
+            return response.json();
         }).then(data => {
             const { token } = data;
             localStorage.setItem('token', token);
-            console.log('Success:');
+            setErrorText(null)
                 navigate('/',);
         }).catch(error => {
-            console.error('Error:', error.message);
+            setErrorText(error.message)
         });
     };
     return (
@@ -46,7 +47,8 @@ const Login = () => {
             }}
         >
             <h1>Login to OoO App</h1>
-            <h2 style={{ color: 'red' }}>{!isCorrect ? 'Incorrect username or password!' : ''}</h2>
+            
+            <h2 style={{ color: 'red' }}>{errorText!=null ? errorText : ''}</h2>
             <Box
                 component="form"
                 sx={{
@@ -77,7 +79,8 @@ const Login = () => {
                     error={!!errors.password}
                     helpertext={errors.password ? 'Password is required' : ''}
                 />
-                <br/>
+                <br />
+
                 <Button type="submit" variant="contained" color="primary">
                     Login
                 </Button>

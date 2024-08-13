@@ -1,9 +1,9 @@
 ﻿using OutOfOffice.Server.Models.SQLmodels;
 using System.ComponentModel.DataAnnotations;
 
-namespace OutOfOffice.Server.Models;
+namespace OutOfOffice.Server.Models.Output;
 
-public partial class approvalRequestDetailsModel
+public partial class approvalRequestExtendedModelOutput
 {
     [Required]
     public int Id { get; set; }

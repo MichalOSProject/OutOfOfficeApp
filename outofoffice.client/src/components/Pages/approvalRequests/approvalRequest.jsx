@@ -7,6 +7,7 @@ const ApprovalRequest = () => {
     const navigate = useNavigate();
     const [selectedAR, setSelectedAR] = useState({});
     const [ARs, setARs] = useState([]);
+    const [errorText, setErrorText] = useState(null);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
@@ -32,11 +33,17 @@ const ApprovalRequest = () => {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorData => {
+                        throw new Error(errorData);
+                    });
+                }
                 return response.json();
             }).then(data => {
+                setErrorText(null)
                 setARs(data)
             }).catch(error => {
-                console.error('Error:', error);
+                setErrorText(error.message)
             });
         }
     }, [setARs]);
@@ -83,7 +90,8 @@ const ApprovalRequest = () => {
             <h1>
                 Approval Request ID: {selID}
             </h1>
-            <Button variant="contained" onClick={handleEditClick} disabled={selLineNumber != 0 ? false : true}>Edit</Button>
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
+            <Button variant="contained" onClick={handleEditClick} disabled={selLineNumber != 0 ? false : true}>Resolve</Button>
             <div style={{ height: '50%', width: '100%' }}>
                 <DataGrid
                     tablesort
@@ -92,6 +100,14 @@ const ApprovalRequest = () => {
                     autoHeight
                     onRowSelectionModelChange={(newSelection) => handleRowSelection(newSelection)}
                     initialState={{
+                        sorting: {
+                            sortModel: [{ field: 'id', sort: 'desc' }],
+                        },
+                        columns: {
+                            columnVisibilityModel: {
+                                LP: false
+                            },
+                        },
                         pagination: {
                             paginationModel: { page: 0, pageSize: 15 },
                         },

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace OutOfOffice.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240802144309_InitialMigration")]
+    [Migration("20240812185154_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -339,7 +339,8 @@ namespace OutOfOffice.Server.Migrations
 
                     b.Property<string>("RequestStatus")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");

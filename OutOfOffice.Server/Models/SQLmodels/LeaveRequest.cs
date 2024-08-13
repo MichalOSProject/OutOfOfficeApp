@@ -21,11 +21,19 @@ public partial class LeaveRequest
 
     public string? Comment { get; set; }
     [Required]
-    public string RequestStatus { get; set; } = null!;
+    public LeaveRequestStatus RequestStatus { get; set; }
 
     ////Keys:
 
     //[ForeignKey("EmployeeId")]
     //[JsonIgnore]
     //public Employee Leaver { get; set; }
+}
+
+public enum LeaveRequestStatus : int
+{
+    New = 0,
+    Rejected = 1,
+    Approved = 2,
+    Cancelled = 3
 }

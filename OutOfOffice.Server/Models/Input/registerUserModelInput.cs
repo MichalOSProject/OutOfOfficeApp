@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OutOfOffice.Server.Models;
+namespace OutOfOffice.Server.Models.Input;
 
-public partial class registerUser
+public partial class registerUserModelInput
 {
     public string Login { get; set; } = null!;
     public string? Password { get; set; } = null!;

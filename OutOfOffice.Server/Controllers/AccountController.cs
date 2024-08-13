@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
-using OutOfOffice.Server.Models;
 using OutOfOffice.Server.Models.SQLmodels;
 using Microsoft.IdentityModel.Tokens;
+using OutOfOffice.Server.Models.Input;
 
 namespace OutOfOffice.Server.Controllers
 {
@@ -31,7 +31,7 @@ namespace OutOfOffice.Server.Controllers
             _userService = userService;
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] logonModelInput model)
         {
             if (ModelState.IsValid)
             {
@@ -47,37 +47,37 @@ namespace OutOfOffice.Server.Controllers
                         return Ok(new { token });
 
                     }
-                    return Unauthorized(new { message = "Account is disabled or login is not matched to Profile" });
+                    return Unauthorized("Account is disabled or login is not matched to Profile");
                 }
                 else if (result.IsLockedOut)
                 {
-                    return StatusCode(StatusCodes.Status423Locked, new { message = "User account locked out" });
+                    return Unauthorized("User account locked out");
                 }
                 else
                 {
-                    return Unauthorized(new { message = "Invalid login attempt" });
+                    return Unauthorized("Invalid login or password");
                 }
             }
 
-            return BadRequest(new { errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+            return BadRequest("Invalid Data");
         }
 
         [HttpPost("username")]
-        public async Task<IActionResult> userName([FromBody] getUsernameID model)
+        public async Task<IActionResult> userName([FromBody] int usernameID)
         {
             try
             {
-                var userName = await _userService.GetUsernameByIdAsync(model.Id);
+                var userName = await _userService.GetUsernameByIdAsync(usernameID);
                 return Ok(userName);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Download Error: {ex.Message}");
+                return BadRequest("Login do not exist");
             }
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> updateData([FromBody] registerUser model)
+        public async Task<IActionResult> updateData([FromBody] registerUserModelInput model)
         {
             string userName = await _userService.GetUsernameByIdAsync(model.EmployeeId);
             if (userName.IsNullOrEmpty())
@@ -102,12 +102,12 @@ namespace OutOfOffice.Server.Controllers
             {
                 return Ok("Password reset successful.");
             }
-            return BadRequest(result.Errors);
+            return BadRequest("Error while update password");
 
         }
 
         [HttpPost("passwordReset")]
-        public async Task<IActionResult> resetPassword([FromBody] resetPasswordModel model)
+        public async Task<IActionResult> resetPassword([FromBody] resetPasswordModelInput model)
         {
             var resultLogin = await _signInManager.PasswordSignInAsync(model.login, model.Password, isPersistent: false, lockoutOnFailure: false);
 
@@ -125,8 +125,7 @@ namespace OutOfOffice.Server.Controllers
                 }
             }
 
-
-            return BadRequest("Invalid login attempt");
+            return BadRequest("Invalid login or Password");
 
         }
     }

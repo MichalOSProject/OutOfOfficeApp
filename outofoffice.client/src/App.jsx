@@ -8,7 +8,6 @@ import LeaveRequest from './components/Pages/leaveRequests/leaveRequest';
 import LeaveRequestEdit from './components/Pages/leaveRequests/edit';
 import Projects from './components/Pages/projects/project';
 import Login from './components/Pages/Logon/login';
-import Register from './components/Pages/Logon/register';
 import ProjectsEdit from './components/Pages/projects/edit';
 import Home from './components/Pages/home';
 import NotFound from './components/Pages/notFound';
@@ -31,7 +30,6 @@ function App() {
                 <Route element={<Protected />}>
                     <Route element={<Layout />}>
                         <Route path="/" element={<Home />} />
-                        <Route path="/register" element={<Register />} />
                         <Route path="/employees" element={<Employees />} />
                         <Route path="/employees/edit" element={<EmployeesEdit />} />
                         <Route path="/employees/add" element={<EmployeesEdit />} />
@@ -39,7 +37,7 @@ function App() {
                         <Route path="/projects/edit" element={<ProjectsEdit />} />
                         <Route path="/projects/add" element={<ProjectsEdit />} />
                         <Route path="/leaveRequests" element={<LeaveRequest />} />
-                        <Route path="/leaveRequests/edit" element={<LeaveRequestEdit />} />
+                        <Route path="/leaveRequests/open" element={<LeaveRequestEdit />} />
                         <Route path="/leaveRequests/add" element={<LeaveRequestEdit />} />
                         <Route path="/approvalRequests" element={<ApprovalRequest />} />
                         <Route path="/approvalRequests/edit" element={<ApprovalRequestEdit />} />

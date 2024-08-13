@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OutOfOffice.Server.Models;
+using OutOfOffice.Server.Models.Input;
+using OutOfOffice.Server.Models.Output;
 using OutOfOffice.Server.Models.SQLmodels;
 
 namespace OutOfOffice.Server.Controllers
@@ -20,7 +21,7 @@ namespace OutOfOffice.Server.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult<Project>> addProject([FromBody] newProject requestData)
+        public async Task<ActionResult<Project>> addProject([FromBody] projectModelInput requestData)
         {
             if (requestData == null)
             {
@@ -34,7 +35,7 @@ namespace OutOfOffice.Server.Controllers
 
             if (requestData.members == null)
             {
-                return Ok(new { message = "Project added successfully without members" });
+                return Ok("Project added successfully without members");
             }
 
             foreach (int idMember in requestData.members)
@@ -73,16 +74,16 @@ namespace OutOfOffice.Server.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Project added successfully" });
+            return Ok("Project added successfully");
         }
 
         [HttpPost("projectsMembers")]
-        public async Task<IActionResult> editProjectMembers([FromBody] projectMembersModel projID)
+        public async Task<IActionResult> editProjectMembers([FromBody] int projID)
         {
             try
             {
                 var idsProjMembers = await _context.ProjectsDetails
-                    .Where(item => item.projectId == projID.projID)
+                    .Where(item => item.projectId == projID)
                     .Select(item => item.employeeId)
                     .ToArrayAsync();
 
@@ -98,12 +99,12 @@ namespace OutOfOffice.Server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Download Error: {ex.Message}");
+                return UnprocessableEntity("Internal server error");
             }
         }
 
         [HttpPost("addProjectsMembers")]
-        public async Task<IActionResult> addProjectMembers([FromBody] addProjectMembersModel requestData)
+        public async Task<IActionResult> addProjectMembers([FromBody] projectMembersModelInput requestData)
         {
             try
             {
@@ -134,12 +135,12 @@ namespace OutOfOffice.Server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Download Error: {ex.Message}");
+                return UnprocessableEntity("Internal server error");
             }
         }
 
         [HttpPost("deleteProjectsMembers")]
-        public async Task<IActionResult> deleteProjectMembers([FromBody] addProjectMembersModel requestData)
+        public async Task<IActionResult> deleteProjectMembers([FromBody] projectMembersModelInput requestData)
         {
             try
             {
@@ -175,21 +176,36 @@ namespace OutOfOffice.Server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Download Error: {ex.Message}");
+                return UnprocessableEntity("Internal server error");
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
+        public async Task<ActionResult<IEnumerable<projectModelOutput>>> GetProjects()
         {
             try
             {
-                var projects = await _context.Projects.ToListAsync();
+                var projects = _context.Projects
+                    .Select(proj => new projectModelOutput
+                    {
+                        Id = proj.Id,
+                        ProjectType = proj.ProjectType,
+                        StartDate = proj.StartDate,
+                        EndDate = proj.EndDate,
+                        Manager = _context.Employees
+                                    .Where(emplo => emplo.Id == proj.ManagerId)
+                                    .Select(emplo => emplo.Name + " " + emplo.Surname)
+                                    .First(),
+                        ManagerId = proj.ManagerId,
+                        Comment = proj.Comment,
+                        ProjectStatus = proj.ProjectStatus
+                    }).ToList();
+
                 return Ok(projects);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Download Error: {ex.Message}");
+                return UnprocessableEntity("Internal server error");
             }
         }
     }
