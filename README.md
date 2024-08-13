@@ -26,3 +26,7 @@ Default Administrator login credentials:
 Default System Account (HR) login credentials:
 - Username: HRadmin
 - Password: Start123@
+
+Default System Account (PM) login credentials:
+- Username: PMadmin
+- Password: Start123@
