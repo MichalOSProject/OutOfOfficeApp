@@ -3,7 +3,7 @@ import { Box, TextField, Button, Alert, AlertTitle } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { DataGrid } from '@mui/x-data-grid';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -11,13 +11,13 @@ import { jwtDecode } from "jwt-decode";
 
 const LeaveRequestsEdit = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const selLR = location.state || {};
     const { register, handleSubmit, getValues, formState: { errors } } = useForm();
     const [selID, setSelID] = useState(null);
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
-    const [errorText, setErrorText] = useState(null);
     const isAddMode = location.pathname.includes('/add');
     const [startDate, setStartDate] = useState(dayjs());
     const [endDate, setEndDate] = useState(dayjs());
@@ -27,7 +27,7 @@ const LeaveRequestsEdit = () => {
         setOpenAlert(false);
     };
 
-    function statusDecode(status) {
+    function statusDecodeLR(status) {
         switch (status) {
             case 0:
                 return 'New';
@@ -37,6 +37,19 @@ const LeaveRequestsEdit = () => {
                 return 'Approved';
             case 3:
                 return 'Cancelled';
+            default:
+                return 'Error Status';
+        }
+    }
+
+    function statusDecodeAP(status) {
+        switch (status) {
+            case 0:
+                return 'New';
+            case 1:
+                return 'Rejected';
+            case 2:
+                return 'Approved';
             default:
                 return 'Error Status';
         }
@@ -63,14 +76,13 @@ const LeaveRequestsEdit = () => {
                     }
                     return response.json();
                 }).then(data => {
-                    setErrorText(null)
                     setApproverDetails(data)
                 }).catch(error => {
-                    setErrorText(error.message)
+                    alert(error.message)
                 });
             }
         }
-    }, [approverDetails]);
+    }, [approverDetails, selLR]);
 
     const columns = [
         { field: 'id', headerName: 'ID:' },
@@ -82,11 +94,13 @@ const LeaveRequestsEdit = () => {
     const rows = approverDetails.map((item) => ({
         id: item.id,
         approver: item.approver,
-        status: statusDecode(item.status),
+        status: statusDecodeAP(item.status),
         comment: item.comment == null ? "No comment" : item.comment
     }));
 
     const onSubmit = async () => {
+        let isError = false;
+        let newLRId = null
 
         if (isAddMode) {
             const formData = getValues();
@@ -96,7 +110,7 @@ const LeaveRequestsEdit = () => {
             formData.startDate = dayjs(startDate).format('YYYY-MM-DD');
             formData.endDate = dayjs(endDate).format('YYYY-MM-DD');
 
-            fetch('https://localhost:7130/api/leaverequest/add', {
+            await fetch('https://localhost:7130/api/leaverequest/add', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -111,20 +125,31 @@ const LeaveRequestsEdit = () => {
                 }
                 return response.text();
             }).then(data => {
+                newLRId = data
                 setAlertMessage(data.message);
                 setAlertTitle('success');
                 setOpenAlert(true);
             }).catch(error => {
+                isError = true;
                 setAlertMessage(error.message);
                 setAlertTitle('error');
                 setOpenAlert(true);
             });
+
+            if (!isError && isAddMode) {
+                formData.id = parseInt(newLRId);
+                formData.requestStatus = 0;
+                const selLR = formData
+                navigate('/leaverequests/open', { state: selLR });
+            }
         }
     };
 
-    const handleCancelRequest = () => {
+    const handleCancelRequest = async() => {
+        let isError = false;
         if (!isAddMode) {
-            fetch('https://localhost:7130/api/leaverequest/cancel', {
+
+            await fetch('https://localhost:7130/api/leaverequest/cancel', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -143,10 +168,14 @@ const LeaveRequestsEdit = () => {
                 setAlertTitle('success');
                 setOpenAlert(true);
             }).catch(error => {
+                isError = true;
                 setAlertMessage(error.message);
                 setAlertTitle('error');
                 setOpenAlert(true);
             });
+            if (!isError) {
+                navigate('/leaverequests');
+            }
         }
     };
 
@@ -154,7 +183,6 @@ const LeaveRequestsEdit = () => {
         <div>
             <h1>{isAddMode ? 'Add New Leave Request' : 'Leave Request ID: ' + selID}</h1>
             {!isAddMode && (<h1>Employee: {selLR.employee}</h1>)}
-            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Box
                 component="form"
                 sx={{
@@ -165,7 +193,7 @@ const LeaveRequestsEdit = () => {
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <TextField
-                    required={isAddMode }
+                    required={isAddMode}
                     name="absenceReason"
                     label="Absence Reason"
                     defaultValue={selLR.absenceReason}
@@ -214,14 +242,14 @@ const LeaveRequestsEdit = () => {
                     <TextField
                         name="RequestStatus"
                         label="Request Status - Read Only"
-                        defaultValue={selLR.requestStatus}
+                        defaultValue={statusDecodeLR(selLR.requestStatus)}
                         {...register("RequestStatus", { required: false })}
                         InputProps={{
                             readOnly: true,
                         }}
                     />
                 )}
-                <br/>
+                <br />
                 {isAddMode && (
                     <Button type="submit" variant="contained" color="primary">
                         Add

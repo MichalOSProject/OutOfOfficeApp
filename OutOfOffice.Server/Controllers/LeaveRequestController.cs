@@ -91,7 +91,7 @@ namespace OutOfOffice.Server.Controllers
             }
             await _context.SaveChangesAsync();
 
-            return Ok("Leave Request added successfully");
+            return Ok(requestData.Id);
         }
 
         [HttpPost("edit")]

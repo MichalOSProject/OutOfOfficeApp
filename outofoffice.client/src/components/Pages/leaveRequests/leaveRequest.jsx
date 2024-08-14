@@ -7,7 +7,6 @@ const LeaveRequest = () => {
     const navigate = useNavigate();
     const [selLR, setSelLR] = useState({});
     const [LRs, setLRs] = useState([]);
-    const [errorText, setErrorText] = useState(null);
     const [data, setData] = useState([]);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
@@ -43,10 +42,9 @@ const LeaveRequest = () => {
                 }
                 return response.json();
             }).then(data => {
-                setErrorText(null)
                 setData(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
             });
         }
         if (LRs.length == 0) {
@@ -64,10 +62,9 @@ const LeaveRequest = () => {
                 }
                 return response.json();
             }).then(data => {
-                setErrorText(null)
                 setLRs(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
             });
         }
     }, [data, setLRs]);
@@ -118,7 +115,6 @@ const LeaveRequest = () => {
             <h1>
                 Leave Request ID: {selID}
             </h1>
-            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Button variant="contained" onClick={handleOpenClick} disabled={selLineNumber != 0 ? false : true}>Open</Button>
             <Button variant="contained" onClick={handleAddClick}>Add</Button>
             <div style={{ height: '50%', width: '100%' }}>

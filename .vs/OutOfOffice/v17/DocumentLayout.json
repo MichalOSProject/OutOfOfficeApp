@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.server\\security\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|solutionrelative:outofoffice.server\\security\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\header\\header.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\header\\header.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\projects\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\projects\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\src\\components\\pages\\employees\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\src\\components\\pages\\employees\\edit.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -47,40 +43,48 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Security\\AuthService.cs",
-              "RelativeDocumentMoniker": "OutOfOffice.Server\\Security\\AuthService.cs",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Security\\AuthService.cs",
-              "RelativeToolTip": "OutOfOffice.Server\\Security\\AuthService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAbAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-13T22:37:24.646Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Header.jsx",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Header\\Header.jsx",
-              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Header\\Header.jsx",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Header\\Header.jsx",
-              "RelativeToolTip": "outofoffice.client\\src\\components\\Header\\Header.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB8AAABmAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2024-08-13T22:36:50.194Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "edit.jsx",
               "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\projects\\edit.jsx",
               "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\projects\\edit.jsx",
               "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\projects\\edit.jsx",
               "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\projects\\edit.jsx",
-              "ViewState": "AQIAAO0AAAAAAAAAAAAAAPcAAABAAAAA",
+              "ViewState": "AQIAAJAAAAAAAAAAAAAAAKEAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2024-08-13T22:33:15.278Z",
+              "WhenOpened": "2024-08-14T12:31:13.023Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "a5d6f5b5-a97a-410d-b626-fd7cd366fa1c",
+        "Display": 1,
+        "X": -5,
+        "Y": 183,
+        "Width": 1090,
+        "Height": 835,
+        "WindowState": 2
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "edit.jsx",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\employees\\edit.jsx",
+              "RelativeDocumentMoniker": "outofoffice.client\\src\\components\\Pages\\employees\\edit.jsx",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\src\\components\\Pages\\employees\\edit.jsx",
+              "RelativeToolTip": "outofoffice.client\\src\\components\\Pages\\employees\\edit.jsx",
+              "ViewState": "AQIAAEUAAAAAAAAAAAAAAHwAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-08-14T12:23:17.833Z",
               "EditorCaption": ""
             }
           ]

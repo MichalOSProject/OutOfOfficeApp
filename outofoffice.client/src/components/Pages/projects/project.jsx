@@ -8,7 +8,6 @@ const Projects = () => {
     const [selProj, setSelProj] = useState({});
     const [projects, setprojects] = useState([]);
     const [selID, setSelID] = useState(0);
-    const [errorText, setErrorText] = useState(null);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
     useEffect(() => {
@@ -27,10 +26,9 @@ const Projects = () => {
                 }
                 return response.json();
             }).then(data => {
-                setErrorText(null)
                 setprojects(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
             });
         }
     }, [projects]);
@@ -83,7 +81,6 @@ const Projects = () => {
             <h1>
                 Project ID: {selID}
             </h1>
-            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Button variant="contained" onClick={handleEditClick} disabled={selLineNumber != 0 ? false : true}>Edit</Button>
             <Button variant="contained" onClick={handleAddClick}>Add</Button>
             <div style={{ height: '50%', width: '100%' }}>

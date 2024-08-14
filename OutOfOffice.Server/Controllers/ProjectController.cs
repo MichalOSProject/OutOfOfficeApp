@@ -35,7 +35,7 @@ namespace OutOfOffice.Server.Controllers
 
             if (requestData.members == null)
             {
-                return Ok("Project added successfully without members");
+                return Ok(newProject.Id);
             }
 
             foreach (int idMember in requestData.members)
@@ -49,7 +49,7 @@ namespace OutOfOffice.Server.Controllers
             }
             await _context.SaveChangesAsync();
 
-            return Ok("Project added successfully with members.");
+            return Ok(newProject.Id);
         }
 
         [HttpPost("edit")]

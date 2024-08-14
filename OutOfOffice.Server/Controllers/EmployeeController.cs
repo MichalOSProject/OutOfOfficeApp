@@ -30,7 +30,7 @@ namespace OutOfOffice.Server.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+                return BadRequest("Invalid Data");
             }
 
             var newEmployee = _mapper.Map<Employee>(requestData);
@@ -59,13 +59,13 @@ namespace OutOfOffice.Server.Controllers
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
-                    return BadRequest(new { errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+                    return BadRequest(string.Join("\n", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).Where(error => !string.IsNullOrWhiteSpace(error))));
                 }
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 await transaction.CommitAsync();
 
-                return Ok("Registration successful");
+                return Ok(newEmployee.Id);
             }
             catch (Exception ex)
             {

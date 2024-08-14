@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,6 +12,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const ProjectsEdit = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const selProj = location.state || {};
     const { register, getValues, formState: { errors } } = useForm();
     const [PMs, setPMs] = useState([]);
@@ -19,7 +20,6 @@ const ProjectsEdit = () => {
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
-    const [errorText, setErrorText] = useState(null);
     const isAddMode = location.pathname.includes('/add');
     const [startDate, setStartDate] = useState(dayjs());
     const [endDate, setEndDate] = useState(dayjs());
@@ -53,10 +53,9 @@ const ProjectsEdit = () => {
                     }
                     return response.json();
                 }).then(data => {
-                    setErrorText(null)
                     setProjectMembers(data)
                 }).catch(error => {
-                    setErrorText(error.message)
+                    alert(error.message)
                 });
             }
         }
@@ -76,10 +75,9 @@ const ProjectsEdit = () => {
                 }
                 return response.json();
             }).then(data => {
-                setErrorText(null)
                 setAllUsers(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
             });
         }
         if (PMs.length == 0) {
@@ -97,13 +95,12 @@ const ProjectsEdit = () => {
                 }
                 return response.json();
             }).then(data => {
-                setErrorText(null)
                 setPMs(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
             });
         }
-    }, [projectMembers, allUsers, PMs]);
+    }, [projectMembers, allUsers, PMs, selProj]);
 
     const columns = [
         { field: 'LP', headerName: 'LP' },
@@ -126,6 +123,8 @@ const ProjectsEdit = () => {
     }));
 
     const onSubmit = async (event) => {
+        let isError = false;
+        let newProjectId = null
         event.preventDefault();
         const formData = getValues();
         if (isAddMode) {
@@ -137,8 +136,7 @@ const ProjectsEdit = () => {
         formData.managerId = parseInt(formData.managerId);
         formData.startDate = dayjs(startDate).format('YYYY-MM-DD');
         formData.endDate = dayjs(endDate).format('YYYY-MM-DD');
-
-        fetch(isAddMode ? 'https://localhost:7130/api/project/add' : 'https://localhost:7130/api/project/edit', {
+        await fetch(isAddMode ? 'https://localhost:7130/api/project/add' : 'https://localhost:7130/api/project/edit', {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -153,14 +151,22 @@ const ProjectsEdit = () => {
             }
             return response.text();
         }).then(data => {
+            isAddMode ? newProjectId = data : null;
             setAlertMessage(data.message);
             setAlertTitle('success');
             setOpenAlert(true);
         }).catch(error => {
+            isError = true;
             setAlertMessage(error.message);
             setAlertTitle('error');
             setOpenAlert(true);
         });
+        if (!isError && isAddMode)
+        {
+            formData.id = parseInt(newProjectId);
+            const selProj = formData
+            navigate('/projects/edit', { state: selProj });
+        }
     };
 
     const handleRowSelection = (newSelection) => {
@@ -228,7 +234,6 @@ const ProjectsEdit = () => {
     return (
         <div>
             <h1>{isAddMode ? 'Add New Project' : 'Project ID: ' + selID}</h1>
-            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Box
                 component="form"
                 sx={{

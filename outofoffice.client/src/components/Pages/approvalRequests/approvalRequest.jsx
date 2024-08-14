@@ -7,7 +7,6 @@ const ApprovalRequest = () => {
     const navigate = useNavigate();
     const [selectedAR, setSelectedAR] = useState({});
     const [ARs, setARs] = useState([]);
-    const [errorText, setErrorText] = useState(null);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
@@ -40,10 +39,9 @@ const ApprovalRequest = () => {
                 }
                 return response.json();
             }).then(data => {
-                setErrorText(null)
                 setARs(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
             });
         }
     }, [setARs]);
@@ -90,7 +88,6 @@ const ApprovalRequest = () => {
             <h1>
                 Approval Request ID: {selID}
             </h1>
-            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Button variant="contained" onClick={handleEditClick} disabled={selLineNumber != 0 ? false : true}>Resolve</Button>
             <div style={{ height: '50%', width: '100%' }}>
                 <DataGrid

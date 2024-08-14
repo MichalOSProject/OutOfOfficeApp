@@ -11,11 +11,10 @@ const EmployeesEdit = () => {
     const { register, handleSubmit, getValues, formState: { errors } } = useForm();
     const [selID, setSelID] = useState(0);
     const [openAlert, setOpenAlert] = useState(false);
-    const [errorText, setErrorText] = useState(null);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const [username, setUsername] = useState(null);
     const [isEnablePasswordChange, setisEnablePasswordChange] = useState(false);
     const [isEnableAdminMode, setisEnableAdminMode] = useState(false);
     const admList = ['BOSS', 'Admin'];
@@ -55,13 +54,11 @@ const EmployeesEdit = () => {
                 }
                 return response.json();
             }).then(data => {
-                setErrorText(null)
                 setHR(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
             });
         }
-
         if (username == null) {
             if (isAdminMode() && !isAddMode) {
                 fetch('https://localhost:7130/api/account/username', {
@@ -79,16 +76,17 @@ const EmployeesEdit = () => {
                     }
                     return response.text();
                 }).then(data => {
-                    setErrorText(null)
                     setUsername(data)
                 }).catch(error => {
-                    setErrorText(error.message)
+                    alert(error.message)
                 });
             }
         }
-    }, [HR,username]);
+    }, [HR, username, data]);
 
     const onSubmit = async () => {
+        let isError = false;
+        let newUserId = null
         const registerData = getValues();
 
         registerData.employeeStatus = registerData.employeeStatus === 'true';
@@ -139,10 +137,12 @@ const EmployeesEdit = () => {
             }
             return response.text();
         }).then(data => {
-            setAlertMessage(data.message);
+            isAddMode ? newUserId = data : null;
+            setAlertMessage(data);
             setAlertTitle('success');
             setOpenAlert(true);
         }).catch(error => {
+            isError =true;
             setAlertMessage(error.message);
             setAlertTitle('error');
             setOpenAlert(true);
@@ -150,7 +150,6 @@ const EmployeesEdit = () => {
 
         if (!isAddMode && isAdminMode() && isEnableAdminMode) {
             isEnablePasswordChange ? null : logonData.Password = null
-            console.log('to send:', logonData)
             await fetch('https://localhost:7130/api/account/update', {
                 method: 'POST',
                 mode: 'cors',
@@ -166,11 +165,17 @@ const EmployeesEdit = () => {
                 }
                 return response.text();
             }).then(data => {
-                setErrorText(null)
                 setUsername(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
+                isError = true;
             });
+        }
+        if (!isError && isAddMode)
+        {
+            registerData.id = parseInt(newUserId);
+            const selEmplo = registerData
+            navigate('/employees/edit', { state: selEmplo });
         }
     };
 
@@ -189,7 +194,6 @@ const EmployeesEdit = () => {
     return (
         <div>
             <h1>{isAddMode ? 'Add New Employee' : 'Employee ID: ' + selID}</h1>
-            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Box
                 component="form"
                 sx={{

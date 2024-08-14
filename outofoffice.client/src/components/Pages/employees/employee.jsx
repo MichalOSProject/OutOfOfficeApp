@@ -7,7 +7,6 @@ const Employees = () => {
     const navigate = useNavigate();
     const [selEmplo, setselEmplo] = useState({});
     const [data, setData] = useState([]);
-    const [errorText, setErrorText] = useState(null);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
 
@@ -27,10 +26,9 @@ const Employees = () => {
                 }
                 return response.json();
             }).then(data => {
-                setErrorText(null)
                 setData(data)
             }).catch(error => {
-                setErrorText(error.message)
+                alert(error.message)
             });
         }
 
@@ -86,7 +84,6 @@ const Employees = () => {
             <h1>
                 Employee ID: {selID}
             </h1>
-            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Button variant="contained" onClick={handleEditClick} disabled={selLineNumber != 0 ? false : true}>Edit</Button>
             <Button variant="contained" onClick={handleAddClick}>Add</Button>
             <div style={{ height: '50%', width: '100%' }}>
