@@ -3,16 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\.eslintrc.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\.eslintrc.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\node_modules\\@types\\react\\index.d.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:outofoffice.client\\node_modules\\@types\\react\\index.d.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.client\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{D1224299-77EA-453C-B0B0-9412EE73EC48}|outofoffice.client\\outofoffice.client.esproj|solutionrelative:outofoffice.client\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|c:\\users\\mosic\\source\\repos\\michalosproject\\outofofficeapp\\outofoffice.server\\controllers\\leaverequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5A0B3B09-FC34-4C03-9628-AA1CA23311C5}|OutOfOffice.Server\\OutOfOffice.Server.csproj|solutionrelative:outofoffice.server\\controllers\\leaverequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -47,40 +39,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": ".eslintrc.js",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\.eslintrc.js",
-              "RelativeDocumentMoniker": "outofoffice.client\\.eslintrc.js",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\.eslintrc.js",
-              "RelativeToolTip": "outofoffice.client\\.eslintrc.js",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2024-08-16T15:02:03.604Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "package.json",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\package.json",
-              "RelativeDocumentMoniker": "outofoffice.client\\package.json",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\package.json",
-              "RelativeToolTip": "outofoffice.client\\package.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAAiAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-08-16T14:44:50.47Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "index.d.ts",
-              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\node_modules\\@types\\react\\index.d.ts",
-              "RelativeDocumentMoniker": "outofoffice.client\\node_modules\\@types\\react\\index.d.ts",
-              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\outofoffice.client\\node_modules\\@types\\react\\index.d.ts",
-              "RelativeToolTip": "outofoffice.client\\node_modules\\@types\\react\\index.d.ts",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2024-08-16T14:42:03.632Z",
+              "Title": "LeaveRequestController.cs",
+              "DocumentMoniker": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Controllers\\LeaveRequestController.cs",
+              "RelativeDocumentMoniker": "OutOfOffice.Server\\Controllers\\LeaveRequestController.cs",
+              "ToolTip": "C:\\Users\\Mosic\\source\\repos\\MichalOSProject\\OutOfOfficeApp\\OutOfOffice.Server\\Controllers\\LeaveRequestController.cs",
+              "RelativeToolTip": "OutOfOffice.Server\\Controllers\\LeaveRequestController.cs",
+              "ViewState": "AQIAAHEAAAAAAAAAAAAwwJYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-16T21:13:43.38Z",
               "EditorCaption": ""
             }
           ]

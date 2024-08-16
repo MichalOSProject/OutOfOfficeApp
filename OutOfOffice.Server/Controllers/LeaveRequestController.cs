@@ -116,6 +116,11 @@ namespace OutOfOffice.Server.Controllers
                 return BadRequest("Leave Request is already cancelled");
             }
 
+            if (LR.RequestStatus.Equals(LeaveRequestStatus.Rejected))
+            {
+                return BadRequest("Leave Request is already rejected");
+            }
+
             string jtiKey = User.FindFirst("Jti")?.Value;
 
             int idFromJWT = _context.JwtTokens
@@ -139,9 +144,12 @@ namespace OutOfOffice.Server.Controllers
 
             if (LR.RequestStatus.Equals(LeaveRequestStatus.Approved))
             {
-                var startDate = LR.StartDate;
-                if (LR.StartDate <= DateOnly.FromDateTime(DateTime.Now))
-                    startDate = DateOnly.FromDateTime(DateTime.Now).AddDays(1);
+                if (LR.EndDate <= DateOnly.FromDateTime(DateTime.Now))
+                {
+                    return BadRequest("Leave Request has been Approved and end some time ago, cannot be canceled");
+                }
+
+                var startDate = LR.StartDate <= DateOnly.FromDateTime(DateTime.Now) ? DateOnly.FromDateTime(DateTime.Now).AddDays(1): LR.StartDate;
 
                 if (LR.EndDate > DateOnly.FromDateTime(DateTime.Now) && LR.EndDate >= startDate)
                 {
