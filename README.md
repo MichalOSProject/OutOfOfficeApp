@@ -7,12 +7,6 @@ OutOfOffice is an application designed to help manage employee leave days. The w
 - The request must be approved by the employee's HR representative (designated upon creation) and by the Project Managers of each project the employee belongs to.
 - Additionally, the application includes a login system, account creation, and password reset functionality.
 
-Elements requiring completion:
-
-- Restrict controller actions based on access groups.
-- Restrict Front-End access based on permissions stored in tokens.
-- Add redirection after successfully action
-
 For testing the application:
 
 - A SQL 2019 instance (minimum SQL EXPRESS) is required for the application to function.
