@@ -1,38 +1,26 @@
 import { useEffect, useState } from 'react';
-import { Box, TextField, Button, InputLabel, FormControl, Alert, AlertTitle, Select, MenuItem, Checkbox, Backdrop, CircularProgress, Fade } from "@mui/material";
+import { Box, TextField, Button, InputLabel, FormControl, Alert, AlertTitle, Select, MenuItem, Checkbox } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 
-const EmployeesEdit = () => {
+const EmployeesAdd = () => {
     const location = useLocation();
     const data = location.state || {};
     const [HR, setHR] = useState([]);
-    const [HRLoaded, setHRLoaded] = useState(false);
     const { register, handleSubmit, getValues, formState: { errors } } = useForm();
-    const [selID, setSelID] = useState(0);
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const navigate = useNavigate();
-    const [username, setUsername] = useState(null);
-    const [usernameLoaded, setUsernameLoaded] = useState(false);
     const [isEnablePasswordChange, setisEnablePasswordChange] = useState(false);
-    const [isEnableAdminMode, setisEnableAdminMode] = useState(false);
     const admList = ['BOSS', 'Admin'];
-    const [newPosition, setNewPosition] = useState(true);
+    const [newPosition, setNewPosition] = useState(false);
     const token = localStorage.getItem('token');
-    const [loading, setLoading] = useState(true);
-    const [fadeTime, setFadeTime] = useState(0);
 
-
-    const isHrMode = () => {
+    const isHrMode = () => { //HR data Access
         const decodedToken = jwtDecode(localStorage.getItem('token'));
         return decodedToken.position === 'HR' || admList.includes(decodedToken.position) ? true : false;
-    }
-    const isAdminMode = () => {
-        const decodedToken = jwtDecode(localStorage.getItem('token'));
-        return admList.includes(decodedToken.position) ? true : false;
     }
 
     const handleAlertClose = () => {
@@ -40,10 +28,10 @@ const EmployeesEdit = () => {
     };
 
     useEffect(() => {
-        setSelID(data.id)
+        setisEnablePasswordChange(true);
         isHrMode() ? null : navigate('/403',);
 
-        if (!HRLoaded) {
+        if (HR.length == 0) {
             fetch('https://localhost:7130/api/employee/hrs', {
                 method: 'GET',
                 mode: 'cors',
@@ -60,87 +48,29 @@ const EmployeesEdit = () => {
                 return response.json();
             }).then(data => {
                 setHR(data)
-                setHRLoaded(true)
             }).catch(error => {
                 alert(error.message)
             });
         }
-        if (!usernameLoaded) {
-            if (isAdminMode()) {
-                fetch('https://localhost:7130/api/account/username', {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data.id)
-                }).then(response => {
-                    if (!response.ok) {
-                        return response.text().then(errorData => {
-                            throw new Error(errorData);
-                        });
-                    }
-                    return response.text();
-                }).then(data => {
-                    setUsername(data)
-                    setUsernameLoaded(true)
-                }).catch(error => {
-                    alert(error.message)
-                });
-            }
-        }
-        if ((isAdminMode() ? usernameLoaded: true) && HRLoaded)
-        {
-            setFadeTime(700)
-            setLoading(false);
-        }
-
-    }, [HR, username, data]);
+    }, [HR, data]);
 
     const onSubmit = async () => {
+        let isError = false;
+        let newUserId = null
         const registerData = getValues();
 
         registerData.employeeStatus = registerData.employeeStatus === 'true';
         registerData.employeePartner = parseInt(registerData.employeePartner);
         registerData.freeDays = parseInt(registerData.freeDays);
 
-        const userData = {
-            employeeStatus:
-                registerData.employeeStatus,
-            freeDays:
-                registerData.freeDays,
-            name:
-                registerData.name,
-            photo:
-                registerData.photo,
-            position:
-                registerData.position,
-            subdivision:
-                registerData.subdivision,
-            surname:
-                registerData.surname,
-            employeePartner:
-                registerData.employeePartner
-        };
-
-        const logonData = {
-            changePassword: registerData.changePassword,
-            login: registerData.login,
-            Password: registerData.password,
-            EmployeeId: parseInt(selID)
-        };
-
-            userData.ID = parseInt(selID)
-
-        await fetch('https://localhost:7130/api/employee/edit', {
+        await fetch('https://localhost:7130/api/employee/add', {
             method: 'POST',
             mode: 'cors',
             headers: {
                 'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify(registerData)
         }).then(response => {
             if (!response.ok) {
                 return response.text().then(errorData => {
@@ -149,42 +79,22 @@ const EmployeesEdit = () => {
             }
             return response.text();
         }).then(data => {
+            newUserId = data
             setAlertMessage(data);
             setAlertTitle('success');
             setOpenAlert(true);
         }).catch(error => {
+            isError = true;
             setAlertMessage(error.message);
             setAlertTitle('error');
             setOpenAlert(true);
         });
 
-        if (isAdminMode() && isEnableAdminMode) {
-            isEnablePasswordChange ? null : logonData.Password = null
-            await fetch('https://localhost:7130/api/account/update', {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(logonData)
-            }).then(response => {
-                if (!response.ok) {
-                    return response.text().then(errorData => {
-                        throw new Error(errorData);
-                    });
-                }
-                return response.text();
-            }).then(data => {
-                setUsername(data)
-            }).catch(error => {
-                alert(error.message)
-            });
+        if (!isError) {
+            registerData.id = parseInt(newUserId);
+            const selEmplo = registerData
+            navigate('/employees/edit', { state: selEmplo });
         }
-    };
-
-    const handleChangeAdminMode = (event) => {
-        setisEnableAdminMode(event.target.checked);
     };
 
     const handleChangePassword = (event) => {
@@ -197,16 +107,7 @@ const EmployeesEdit = () => {
 
     return (
         <div>
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading}
-                TransitionComponent={Fade}
-                transitionDuration={fadeTime} // Czas zanikania w ms
-            >
-                Loading Data
-                <CircularProgress size={100} sx={{ color: '#7b00ff' }} />
-            </Backdrop>
-            <h1>Employee ID: {selID}</h1>
+            <h1>Add New Employee</h1>
             <Box
                 component="form"
                 sx={{
@@ -322,39 +223,28 @@ const EmployeesEdit = () => {
                     defaultValue={data.photo}
                     {...register("photo", { required: false })}
                 />
-                {(isAdminMode()) && (
-                    <Box>
-                        <br />
-                        <h2>Edit Logon Data? <Checkbox checked={isEnableAdminMode} onChange={handleChangeAdminMode} /></h2>
-                    </Box>
-                )}
-                {(isAdminMode() && isEnableAdminMode) && (
-                    <Box>
-                        <h2>Only for adding a new user or for administrators</h2>
-
-                        <TextField
-                            name="login"
-                            label="Login"
-                            defaultValue={username}
-                            {...register("login", { required: true })}
-                            error={!!errors.login}
-                            helpertext={errors.login ? 'Login is required' : ''}
-                        />
-                        <h3>Require change password at next logon:<Checkbox defaultChecked={false} {...register("changePassword")} /></h3>
-                        <h3>Do you want to change a password? <Checkbox checked={isEnablePasswordChange} onChange={handleChangePassword} disabled={false} /></h3>
-                        <TextField
-                            name="password"
-                            label="Password"
-                            type="password"
-                            disabled={!isEnablePasswordChange}
-                            {...register("password", { required: isEnablePasswordChange })}
-                            error={!!errors.password}
-                            helpertext={errors.password ? 'Password is required' : ''}
-                        />
-                    </Box>)}
-                    <br/>
+                <h2>Logon information:</h2>
+                <TextField
+                    name="login"
+                    label="Login"
+                    {...register("login", { required: true })}
+                    error={!!errors.login}
+                    helpertext={errors.login ? 'Login is required' : ''}
+                />
+                <h3>Require change password at next logon:<Checkbox defaultChecked={true} {...register("changePassword")} /></h3>
+                <h3>Do you want to change a password? <Checkbox checked={isEnablePasswordChange} onChange={handleChangePassword} disabled={true} /></h3>
+                <TextField
+                    name="password"
+                    label="Password"
+                    type="password"
+                    disabled={!isEnablePasswordChange}
+                    {...register("password", { required: isEnablePasswordChange })}
+                    error={!!errors.password}
+                    helpertext={errors.password ? 'Password is required' : ''}
+                />
+                <br/>
                 <Button type="submit" variant="contained" color="primary">
-                    Confirm
+                    Add
                 </Button>
             </Box>
             <Alert
@@ -369,4 +259,4 @@ const EmployeesEdit = () => {
     );
 };
 
-export default EmployeesEdit;
+export default EmployeesAdd;

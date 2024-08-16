@@ -16,6 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<LeaveRequest> LeaveRequests { get; set; }
     public virtual DbSet<Project> Projects { get; set; }
     public virtual DbSet<ProjectDetails> ProjectsDetails { get; set; }
+    public virtual DbSet<JwtTokens> JwtTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,10 +32,17 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         //    .HasForeignKey(e => e.EmployeePartner)
         //    .OnDelete(DeleteBehavior.Restrict);
 
+        //modelBuilder.Entity<JwtTokens>()
+        //    .HasOne(u => u.employeesToken)
+        //    .WithMany()
+        //    .HasForeignKey(u => u.UserId)
+        //    .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<ApprovalRequest>()
             .Property(req => req.Status)
             .HasConversion<string>()
             .HasMaxLength(50);
+
 
         modelBuilder.Entity<LeaveRequest>()
             .Property(req => req.RequestStatus)

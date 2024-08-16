@@ -1,13 +1,15 @@
 import Header from "./Header/Header"
 import Footer from "./Footer/Footer"
-import { Outlet } from 'react-router-dom';
+import { Outlet, useOutletContext } from 'react-router-dom';
 
-function Layout() {
+const Layout = () => {
+    const tokenAccess = useOutletContext()?.tokenAccess
+
     return (
         <div>
-            <Header />
+            <Header context={{ tokenAccess }} />
             <main>
-                <Outlet />
+                <Outlet context={{ tokenAccess }} />
             </main>
             <Footer />
         </div>

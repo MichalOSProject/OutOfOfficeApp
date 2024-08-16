@@ -1,21 +1,27 @@
 import { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
+import {Button, Backdrop, CircularProgress, Fade } from "@mui/material";   
 
 const Projects = () => {
     const navigate = useNavigate();
     const [selProj, setSelProj] = useState({});
-    const [projects, setprojects] = useState([]);
+    const [projects, setProjects] = useState([]);
+    const [projectsLoaded, setProjectsLoaded] = useState(false);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
+    const token = localStorage.getItem('token');
+    const [loading, setLoading] = useState(true);
+    const [fadeTime, setFadeTime] = useState(0);
+
 
     useEffect(() => {
-        if (projects.length == 0) {
+        if (!projectsLoaded) {
             fetch('https://localhost:7130/api/project', {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
@@ -26,11 +32,16 @@ const Projects = () => {
                 }
                 return response.json();
             }).then(data => {
-                setprojects(data)
+                setProjects(data)
+                setProjectsLoaded(true)
             }).catch(error => {
                 alert(error.message)
             });
+        } else {
+            setFadeTime(700)
+            setLoading(false);
         }
+
     }, [projects]);
 
     const columns = [
@@ -78,6 +89,15 @@ const Projects = () => {
 
     return (
         <div>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+                TransitionComponent={Fade}
+                transitionDuration={fadeTime} // Czas zanikania w ms
+            >
+                Loading Data
+                <CircularProgress size={100} sx={{ color: '#7b00ff' }} />
+            </Backdrop>
             <h1>
                 Project ID: {selID}
             </h1>

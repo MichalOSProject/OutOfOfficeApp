@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
+import { Button, Backdrop, CircularProgress, Fade } from "@mui/material";   
 
 const ApprovalRequest = () => {
     const navigate = useNavigate();
     const [selectedAR, setSelectedAR] = useState({});
     const [ARs, setARs] = useState([]);
+    const [ARsLoaded, setARsLoaded] = useState(false);
     const [selID, setSelID] = useState(0);
     const [selLineNumber, setSelLineNumber] = useState(0);
+    const token = localStorage.getItem('token');
+    const [loading, setLoading] = useState(true);
+    const [fadeTime, setFadeTime] = useState(0);
+
 
     function statusDecode(status){
         switch (status) {
@@ -24,11 +29,12 @@ const ApprovalRequest = () => {
     }
 
     useEffect(() => {
-        if (ARs.length == 0) {
+        if (!ARsLoaded) {
             fetch('https://localhost:7130/api/approvalRequest', {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
@@ -40,11 +46,16 @@ const ApprovalRequest = () => {
                 return response.json();
             }).then(data => {
                 setARs(data)
+                setARsLoaded(true)
             }).catch(error => {
                 alert(error.message)
             });
+        } else {
+            setFadeTime(700)
+            setLoading(false);
         }
-    }, [setARs]);
+
+    }, [ARs]);
 
     const columns = [
         { field: 'LP', headerName: 'LP' },
@@ -79,12 +90,21 @@ const ApprovalRequest = () => {
     };
 
     const handleEditClick = () => {
-        navigate('/approvalrequests/edit', { state: { selectedAR } });
+        navigate('/approvalRequests/resolve', { state: { selectedAR } });
     };
 
 
     return (
         <div>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+                TransitionComponent={Fade}
+                transitionDuration={fadeTime} // Czas zanikania w ms
+            >
+                Loading Data
+                <CircularProgress size={100} sx={{ color: '#7b00ff' }} />
+            </Backdrop>
             <h1>
                 Approval Request ID: {selID}
             </h1>

@@ -50,6 +50,7 @@ ALTER TABLE [Employees]
     CONSTRAINT [FK_Employees_Employees_EmployeePartner] FOREIGN KEY ([EmployeePartner]) REFERENCES [Employees] ([Id]) ON DELETE NO ACTION
 GO
 
+
 CREATE TABLE [AspNetRoleClaims] (
     [Id] int NOT NULL IDENTITY,
     [RoleId] nvarchar(450) NOT NULL,
@@ -81,6 +82,19 @@ CREATE TABLE [AspNetUsers] (
     [AccessFailedCount] int NOT NULL,
     CONSTRAINT [PK_AspNetUsers] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_AspNetUsers_Employees_EmployeeId] FOREIGN KEY ([EmployeeId]) REFERENCES [Employees] ([Id]) ON DELETE NO ACTION
+);
+GO
+
+CREATE TABLE [JwtTokens] (
+    [Id] int NOT NULL IDENTITY,
+    [Token] nvarchar(max) NOT NULL,
+    [Jti] nvarchar(max) NOT NULL,
+    [UserId] int NOT NULL,
+    [Position] nvarchar(max) NOT NULL,
+    [Expiration] datetime2 NOT NULL,
+    [Enabled] bit NOT NULL,
+    CONSTRAINT [PK_JwtTokens] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_JwtTokens_Employees_UserId] FOREIGN KEY ([UserId]) REFERENCES [Employees] ([Id]) ON DELETE NO ACTION
 );
 GO
 
@@ -204,6 +218,9 @@ GO
 CREATE INDEX [IX_Employees_EmployeePartner] ON [Employees] ([EmployeePartner]);
 GO
 
+CREATE INDEX [IX_JwtTokens_UserId] ON [JwtTokens] ([UserId]);
+GO
+
 CREATE INDEX [IX_LeaveRequests_EmployeeId] ON [LeaveRequests] ([EmployeeId]);
 GO
 
@@ -301,7 +318,7 @@ NEWID(),
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20240812185154_InitialMigration', N'8.0.7');
+VALUES (N'20240815141831_InitialMigration', N'8.0.7');
 GO
 
 COMMIT;

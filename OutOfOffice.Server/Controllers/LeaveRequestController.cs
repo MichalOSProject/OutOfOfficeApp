@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nager.Holiday;
 using OutOfOffice.Server.Models.Output;
@@ -20,6 +21,7 @@ namespace OutOfOffice.Server.Controllers
             _workdayCalculatorService = workdayCalculatorService;
         }
 
+        [Authorize]
         [HttpPost("add")]
         public async Task<ActionResult<LeaveRequest>> addLeaveRequest([FromBody] LeaveRequest requestData)
         {
@@ -32,6 +34,13 @@ namespace OutOfOffice.Server.Controllers
             {
                 return BadRequest("The start date must be before the end date.");
             }
+
+            string jtiKey = User.FindFirst("Jti")?.Value;
+
+            requestData.EmployeeId = _context.JwtTokens
+                            .Where(token => token.Jti.Equals(jtiKey))
+                            .Select(token => token.UserId)
+                            .FirstOrDefault();
 
             var employee = await _context.Employees
                                     .Where(emplo => emplo.Id == requestData.EmployeeId)
@@ -70,7 +79,7 @@ namespace OutOfOffice.Server.Controllers
 
             if (projects == null)
             {
-                return Ok("No projects Manager included");
+                return Ok(requestData.Id);
             }
 
             var projectManagers = await _context.Projects
@@ -94,32 +103,7 @@ namespace OutOfOffice.Server.Controllers
             return Ok(requestData.Id);
         }
 
-        [HttpPost("edit")]
-        public async Task<ActionResult<LeaveRequest>> editLeaveRequest([FromBody] LeaveRequest requestData)
-        {
-            if (requestData == null)
-            {
-                return BadRequest("Invalid data.");
-            }
-
-            var LeaveRequests = _context.LeaveRequests.FirstOrDefault(item => item.Id == requestData.Id);
-            if (LeaveRequests == null)
-            {
-                return BadRequest("The LeaveRequest does not exist");
-            }
-
-            LeaveRequests.EmployeeId = requestData.EmployeeId;
-            LeaveRequests.AbsenceReason = requestData.AbsenceReason;
-            LeaveRequests.StartDate = requestData.StartDate;
-            LeaveRequests.EndDate = requestData.EndDate;
-            LeaveRequests.Comment = requestData.Comment;
-            LeaveRequests.RequestStatus = requestData.RequestStatus;
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Leave Request added successfully");
-        }
-
+        [Authorize]
         [HttpPost("cancel")]
         public async Task<ActionResult<LeaveRequest>> cancelLeaveRequest([FromBody] int requestID)
         {
@@ -130,6 +114,23 @@ namespace OutOfOffice.Server.Controllers
             if (LR.RequestStatus.Equals(LeaveRequestStatus.Cancelled))
             {
                 return BadRequest("Leave Request is already cancelled");
+            }
+
+            string jtiKey = User.FindFirst("Jti")?.Value;
+
+            int idFromJWT = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.UserId)
+                .FirstOrDefault();
+
+            bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+            if (!LR.EmployeeId.Equals(idFromJWT) && !isAdmin)
+            {
+                return BadRequest("You are not the owner of Leave Request");
             }
 
             var employee = await _context.Employees
@@ -158,12 +159,35 @@ namespace OutOfOffice.Server.Controllers
             return Ok("Leave Request cancelled successfully");
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<leaveRequestModelOutput>>> GetLeaveRequests()
         {
             try
             {
-                var LeaveRequests = _context.LeaveRequests
+                string jtiKey = User.FindFirst("Jti")?.Value;
+
+                int idFromJWT = _context.JwtTokens
+                    .Where(token => token.Jti.Equals(jtiKey))
+                    .Select(token => token.UserId)
+                    .FirstOrDefault();
+
+                bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+                var LRs = new List<LeaveRequest>();
+
+                if (isAdmin)
+                {
+                    LRs = await _context.LeaveRequests.ToListAsync();
+                }
+                else
+                {
+                    LRs = await _context.LeaveRequests.Where(item => item.EmployeeId.Equals(idFromJWT)).ToListAsync();
+                }
+                var LeaveRequests = LRs
                     .Select(LR => new leaveRequestModelOutput
                     {
                         Id = LR.Id,

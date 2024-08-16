@@ -7,16 +7,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useLocation } from 'react-router-dom';
 
-const EmployeesEdit = () => {
+const RequestResolve = () => {
     const location = useLocation();
     const selectedAR = location.state?.selectedAR || {};
-    const { register, handleSubmit, getValues, formState: { errors } } = useForm();
+    const { register, handleSubmit, getValues } = useForm();
     const [selID, setSelID] = useState(0);
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const [startDate, setStartDate] = useState(dayjs());
     const [endDate, setEndDate] = useState(dayjs());
+    const token = localStorage.getItem('token');
 
     const handleAlertClose = () => {
         setOpenAlert(false);
@@ -37,7 +38,8 @@ const EmployeesEdit = () => {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
         }).then(response => {
@@ -114,4 +116,4 @@ const EmployeesEdit = () => {
     );
 };
 
-export default EmployeesEdit;
+export default RequestResolve;

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Server.Models.Input;
@@ -20,12 +21,20 @@ namespace OutOfOffice.Server.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Policy = "PMPosition")]
         [HttpPost("add")]
         public async Task<ActionResult<Project>> addProject([FromBody] projectModelInput requestData)
         {
             if (requestData == null)
             {
                 return BadRequest("Invalid data.");
+            }
+
+            string pmPosition = _context.Employees.Where(emplo => emplo.Id.Equals(requestData.ManagerId)).Select(emplo => emplo.Position).FirstOrDefault();
+
+            if (!pmPosition.Equals("Project Manager", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Project must be owned by Employee who is Project Manager");
             }
 
             var newProject = _mapper.Map<Project>(requestData);
@@ -52,6 +61,7 @@ namespace OutOfOffice.Server.Controllers
             return Ok(newProject.Id);
         }
 
+        [Authorize(Policy = "PMPosition")]
         [HttpPost("edit")]
         public async Task<ActionResult<Project>> editProject([FromBody] Project requestData)
         {
@@ -60,11 +70,36 @@ namespace OutOfOffice.Server.Controllers
                 return BadRequest("Invalid data.");
             }
 
+            string jtiKey = User.FindFirst("Jti")?.Value;
+
+            int idFromJWT = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.UserId)
+                .FirstOrDefault();
+
+            bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
             var projects = _context.Projects.FirstOrDefault(item => item.Id == requestData.Id);
             if (projects == null)
             {
                 return BadRequest("The Project does not exist");
             }
+
+            if(!projects.ManagerId.Equals(idFromJWT) && !isAdmin)
+            {
+                return BadRequest("You are not this Project's Manager");
+            }
+
+            string pmPosition = _context.Employees.Where(emplo => emplo.Id.Equals(requestData.ManagerId)).Select(emplo => emplo.Position).FirstOrDefault();
+
+            if (!pmPosition.Equals("Project Manager", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Project must be owned by Employee who is Project Manager");
+            }
+
             projects.ProjectType = requestData.ProjectType;
             projects.StartDate = requestData.StartDate;
             projects.EndDate = requestData.EndDate;
@@ -77,8 +112,9 @@ namespace OutOfOffice.Server.Controllers
             return Ok("Project added successfully");
         }
 
+        [Authorize(Policy = "PMPosition")]
         [HttpPost("projectsMembers")]
-        public async Task<IActionResult> editProjectMembers([FromBody] int projID)
+        public async Task<IActionResult> getProjectMembers([FromBody] int projID)
         {
             try
             {
@@ -95,6 +131,7 @@ namespace OutOfOffice.Server.Controllers
                 var projMembers = await _context.Employees
                     .Where(item => idsProjMembers.Contains(item.Id))
                     .ToArrayAsync();
+
                 return Ok(projMembers);
             }
             catch (Exception ex)
@@ -103,6 +140,7 @@ namespace OutOfOffice.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "PMPosition")]
         [HttpPost("addProjectsMembers")]
         public async Task<IActionResult> addProjectMembers([FromBody] projectMembersModelInput requestData)
         {
@@ -112,6 +150,33 @@ namespace OutOfOffice.Server.Controllers
                 {
                     return BadRequest("No data to process");
                 }
+
+                string jtiKey = User.FindFirst("Jti")?.Value;
+
+                int idFromJWT = _context.JwtTokens
+                    .Where(token => token.Jti.Equals(jtiKey))
+                    .Select(token => token.UserId)
+                    .FirstOrDefault();
+
+                bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+                var project = _context.Projects
+                                   .Where(item => item.Id == requestData.projID)
+                                   .FirstOrDefault();
+
+                if (project == null)
+                {
+                    return BadRequest("Project do not exist");
+                }
+
+                if (!project.ManagerId.Equals(idFromJWT) && !isAdmin)
+                {
+                    return BadRequest("You are not this Project's Manager");
+                }
+
                 var projectCurrentMembers = await _context.ProjectsDetails
                     .Where(item => item.projectId == requestData.projID)
                     .Select(item => item.employeeId)
@@ -139,6 +204,7 @@ namespace OutOfOffice.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "PMPosition")]
         [HttpPost("deleteProjectsMembers")]
         public async Task<IActionResult> deleteProjectMembers([FromBody] projectMembersModelInput requestData)
         {
@@ -148,6 +214,33 @@ namespace OutOfOffice.Server.Controllers
                 {
                     return BadRequest("No data to process");
                 }
+
+                string jtiKey = User.FindFirst("Jti")?.Value;
+
+                int idFromJWT = _context.JwtTokens
+                    .Where(token => token.Jti.Equals(jtiKey))
+                    .Select(token => token.UserId)
+                    .FirstOrDefault();
+
+                bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+                var project = _context.Projects
+                                   .Where(item => item.Id == requestData.projID)
+                                   .FirstOrDefault();
+
+                if (project == null)
+                {
+                    return BadRequest("Project do not exist");
+                }
+
+                if (!project.ManagerId.Equals(idFromJWT) && !isAdmin)
+                {
+                    return BadRequest("You are not this Project's Manager");
+                }
+
                 var projectCurrentMembers = await _context.ProjectsDetails
                     .Where(item => item.projectId == requestData.projID)
                     .Select(item => item.employeeId)
@@ -180,6 +273,7 @@ namespace OutOfOffice.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "PMPosition")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<projectModelOutput>>> GetProjects()
         {
@@ -193,9 +287,9 @@ namespace OutOfOffice.Server.Controllers
                         StartDate = proj.StartDate,
                         EndDate = proj.EndDate,
                         Manager = _context.Employees
-                                    .Where(emplo => emplo.Id == proj.ManagerId)
+                                    .Where(emplo => emplo.Id == proj.ManagerId && emplo.Position.Equals("Project Manager"))
                                     .Select(emplo => emplo.Name + " " + emplo.Surname)
-                                    .First(),
+                                    .FirstOrDefault() ?? "Required action",
                         ManagerId = proj.ManagerId,
                         Comment = proj.Comment,
                         ProjectStatus = proj.ProjectStatus

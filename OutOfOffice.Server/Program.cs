@@ -7,6 +7,8 @@ using OutOfOffice.Server.Models.SQLmodels;
 using OutOfOffice.Server.Services.Implementations;
 using OutOfOffice.Server.Services.Interfaces;
 using Nager.Holiday;
+using OutOfOffice.Server.Security;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,9 +45,23 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("BossPosition", policy =>
+        policy.Requirements.Add(new PositionRequirement(new[] { "BOSS" })));
+    options.AddPolicy("HRPosition", policy =>
+        policy.Requirements.Add(new PositionRequirement(new[] { "HR", "BOSS" })));
+    options.AddPolicy("PMPosition", policy =>
+        policy.Requirements.Add(new PositionRequirement(new[] { "Project Manager", "BOSS" })));
+    options.AddPolicy("HighPosition", policy =>
+        policy.Requirements.Add(new PositionRequirement(new[] { "HR", "Project Manager", "BOSS" })));
+});
+
 builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddScoped<AuthService>();
+
+builder.Services.AddScoped<IAuthorizationHandler, PositionHandler>();
 
 builder.Services.AddControllersWithViews();
 
@@ -54,9 +70,12 @@ builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("https://localhost:5173")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod());
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
 });
 
 builder.Services.AddAutoMapper(typeof(Program));
@@ -76,11 +95,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowSpecificOrigin");
+
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseCors("AllowSpecificOrigin");
 
 app.Use(async (context, next) =>
 {

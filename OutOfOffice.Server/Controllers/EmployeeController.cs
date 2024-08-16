@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +27,36 @@ namespace OutOfOffice.Server.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize(Policy = "HRPosition")]
         public async Task<ActionResult<Employee>> AddEmployee([FromBody] userModelInput requestData)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid Data");
+            }
+
+            string jtiKey = User.FindFirst("Jti")?.Value;
+
+            int idFromJWT = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.UserId)
+                .FirstOrDefault();
+
+            bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+            if (requestData.Position.Equals("Boss", StringComparison.OrdinalIgnoreCase) && !isAdmin)
+            {
+                return BadRequest("Only Administrator's account can create another Administrator");
+            }
+
+            string hrPosition = _context.Employees.Where(emplo => emplo.Id.Equals(requestData.EmployeePartner)).Select(emplo => emplo.Position).FirstOrDefault();
+
+            if (!hrPosition.Equals("HR", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Employee Partner must have HR Position");
             }
 
             var newEmployee = _mapper.Map<Employee>(requestData);
@@ -76,6 +102,7 @@ namespace OutOfOffice.Server.Controllers
 
 
         [HttpPost("edit")]
+        [Authorize(Policy = "HRPosition")]
         public async Task<ActionResult<Employee>> editEmployee([FromBody] Employee requestData)
         {
             if (requestData == null)
@@ -83,10 +110,45 @@ namespace OutOfOffice.Server.Controllers
                 return BadRequest("Invalid data.");
             }
 
+            string jtiKey = User.FindFirst("Jti")?.Value;
+
+            int idFromJWT = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.UserId)
+                .FirstOrDefault();
+
+            bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
             var employees = _context.Employees.FirstOrDefault(item => item.Id == requestData.Id);
+
             if (employees == null)
             {
                 return BadRequest("The Employee does not exist");
+            }
+
+            if (!employees.EmployeePartner.Equals(idFromJWT) && !isAdmin)
+            {
+                return BadRequest("You are not the proper HR Manager");
+            }
+
+            if (requestData.Position.Equals("Boss", StringComparison.OrdinalIgnoreCase) && !employees.Position.Equals("Boss", StringComparison.OrdinalIgnoreCase) && !isAdmin)
+            {
+                return BadRequest("Only Administrator's account can upgrade another account to Administrator role");
+            }
+
+            if (employees.Position.Equals("Boss", StringComparison.OrdinalIgnoreCase) && !requestData.Position.Equals("Boss", StringComparison.OrdinalIgnoreCase) && !isAdmin)
+            {
+                return BadRequest("Only Administrator's account can change another Administrator account role");
+            }
+
+            string hrPosition = _context.Employees.Where(emplo => emplo.Id.Equals(requestData.EmployeePartner)).Select(emplo => emplo.Position).FirstOrDefault();
+
+            if (!hrPosition.Equals("HR", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Employee Partner must have HR Position");
             }
 
             employees.Name = requestData.Name;
@@ -98,12 +160,23 @@ namespace OutOfOffice.Server.Controllers
             employees.FreeDays = requestData.FreeDays;
             employees.Photo = requestData.Photo;
 
+            if (!requestData.EmployeeStatus) {
+                var tokens = _context.JwtTokens
+                        .Where(x => x.UserId.Equals(employees.Id))
+                        .ToList();
+                foreach (var token in tokens)
+                {
+                    token.Enabled = false;
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok("Employee modified successfully");
         }
 
         [HttpGet]
+        [Authorize(Policy = "HighPosition")]
         public async Task<ActionResult<IEnumerable<employeeModelOutput>>> GetEmployees()
         {
             try
@@ -119,9 +192,9 @@ namespace OutOfOffice.Server.Controllers
                             Position = emplo.Position,
                             EmployeeStatus = emplo.EmployeeStatus,
                             EmployeePartner = _context.Employees
-                                                        .Where(hr => hr.Id == emplo.EmployeePartner)
+                                                        .Where(hr => hr.Id == emplo.EmployeePartner && hr.Position.Equals("HR"))
                                                         .Select(hr => hr.Name + " " + hr.Surname)
-                                                        .First(),
+                                                        .FirstOrDefault() ?? "Required action",
                             EmployeePartnerID = emplo.EmployeePartner,
                             FreeDays = emplo.FreeDays,
                             Photo = emplo.Photo
@@ -134,6 +207,8 @@ namespace OutOfOffice.Server.Controllers
                 return UnprocessableEntity("Internal server error");
             }
         }
+
+        [Authorize(Policy = "HighPosition")]
         [HttpGet("HRs")]
         public async Task<ActionResult<IEnumerable<hrsModelOutput>>> GetHRs()
         {
@@ -156,6 +231,8 @@ namespace OutOfOffice.Server.Controllers
                 return UnprocessableEntity("Internal server error");
             }
         }
+
+        [Authorize(Policy = "HighPosition")]
         [HttpGet("PMs")]
         public async Task<ActionResult<IEnumerable<pmsModelOutput>>> GetPMs()
         {

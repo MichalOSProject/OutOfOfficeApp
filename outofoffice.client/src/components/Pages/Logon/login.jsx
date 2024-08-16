@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Box, TextField, Button} from '@mui/material';
+import { Box, TextField, Button } from "@mui/material";
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const { register, handleSubmit, getValues, formState: { errors } } = useForm();
     const navigate = useNavigate();
-    const [errorText,setErrorText]  = useState(null);
+    const [errorText, setErrorText] = useState(null);
 
     const onSubmit = async () => {
         const loginData = getValues();
@@ -29,7 +29,7 @@ const Login = () => {
             const { token } = data;
             localStorage.setItem('token', token);
             setErrorText(null)
-                navigate('/',);
+            navigate('/',);
         }).catch(error => {
             setErrorText(error.message)
         });
@@ -47,8 +47,8 @@ const Login = () => {
             }}
         >
             <h1>Login to OoO App</h1>
-            
-            <h2 style={{ color: 'red' }}>{errorText!=null ? errorText : ''}</h2>
+
+            <h2 style={{ color: 'red' }}>{errorText != null ? errorText : ''}</h2>
             <Box
                 component="form"
                 sx={{
@@ -69,7 +69,7 @@ const Login = () => {
                     error={!!errors.login}
                     helpertext={errors.login ? 'Login is required' : ''}
                 />
-                <br/>
+                <br />
                 <TextField
                     required
                     name="password"

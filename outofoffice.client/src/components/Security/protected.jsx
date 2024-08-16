@@ -23,9 +23,9 @@ const Protected = () => {
         return <Navigate to="/login" />;
     }
 
+    const tokenAccess = decodedToken.position;
 
-
-    return <Outlet />;
+    return (<Outlet context={{ tokenAccess }} />);
 };
 
 export default Protected;

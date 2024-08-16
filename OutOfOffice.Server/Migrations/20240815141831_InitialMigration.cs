@@ -107,6 +107,29 @@ namespace OutOfOffice.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "JwtTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Enabled = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JwtTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_JwtTokens_Employees_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LeaveRequests",
                 columns: table => new
                 {
@@ -353,6 +376,11 @@ namespace OutOfOffice.Server.Migrations
                 column: "EmployeePartner");
 
             migrationBuilder.CreateIndex(
+                name: "IX_JwtTokens_UserId",
+                table: "JwtTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LeaveRequests_EmployeeId",
                 table: "LeaveRequests",
                 column: "EmployeeId");
@@ -393,6 +421,9 @@ namespace OutOfOffice.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "JwtTokens");
 
             migrationBuilder.DropTable(
                 name: "ProjectsDetails");

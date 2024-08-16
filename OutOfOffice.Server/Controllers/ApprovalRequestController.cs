@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OutOfOffice.Server.Models.Input;
@@ -23,6 +24,7 @@ namespace OutOfOffice.Server.Controllers
             _workdayCalculatorService = workdayCalculatorService;
         }
 
+        [Authorize(Policy = "HighPosition")]
         [HttpPost("edit")]
         public async Task<ActionResult<ApprovalRequest>> updateApprovalRequest([FromBody] updateApprovalRequestModelInput requestData)
         {
@@ -35,7 +37,25 @@ namespace OutOfOffice.Server.Controllers
                 return BadRequest("Status not updated");
             }
 
+            string jtiKey = User.FindFirst("Jti")?.Value;
+
+            int idFromJWT = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.UserId)
+                .FirstOrDefault();
+
+            bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
             var ApprovalRequests = _context.ApprovalRequests.FirstOrDefault(item => item.Id == requestData.id);
+
+            if (!ApprovalRequests.ApproverId.Equals(idFromJWT) && !isAdmin)
+            {
+                return BadRequest("You are not the proper approver");
+            }
+
             if (ApprovalRequests == null)
             {
                 return BadRequest("The Approval Request does not exist");
@@ -89,12 +109,35 @@ namespace OutOfOffice.Server.Controllers
 
             return Ok("Approval Request updated successfully");
         }
+
+        [Authorize]
         [HttpPost("approveStatus")]
         public async Task<ActionResult<approvalRequestDetailsModelOutput>> getApproveStatus([FromBody] int leaveRequestID)
         {
             if (leaveRequestID == null)
             {
                 return BadRequest("Invalid data.");
+            }
+
+            string jtiKey = User.FindFirst("Jti")?.Value;
+
+            int idFromJWT = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.UserId)
+                .FirstOrDefault();
+
+            bool isAdmin = _context.JwtTokens
+                .Where(token => token.Jti.Equals(jtiKey))
+                .Select(token => token.Position)
+                .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+            var LR = _context.LeaveRequests
+                .Where(item => item.Id.Equals(leaveRequestID))
+                .FirstOrDefault();
+
+            if (!LR.EmployeeId.Equals(idFromJWT) && !isAdmin)
+            {
+                return BadRequest("You are not the proper approver");
             }
 
             var ApprovalRequests = await _context.ApprovalRequests.ToListAsync();
@@ -122,12 +165,34 @@ namespace OutOfOffice.Server.Controllers
 
             return Ok(approverRequestsList);
         }
+
+        [Authorize(Policy = "HighPosition")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ApprovalRequest>>> GetLeaveRequests()
+        public async Task<ActionResult<IEnumerable<ApprovalRequest>>> GetApproveRequests()
         {
             try
             {
-                var ApprovalRequests = await _context.ApprovalRequests.ToListAsync();
+                string jtiKey = User.FindFirst("Jti")?.Value;
+
+                int idFromJWT = _context.JwtTokens
+                    .Where(token => token.Jti.Equals(jtiKey))
+                    .Select(token => token.UserId)
+                    .FirstOrDefault();
+
+                bool isAdmin = _context.JwtTokens
+                    .Where(token => token.Jti.Equals(jtiKey))
+                    .Select(token => token.Position)
+                    .FirstOrDefault().Equals("Boss", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+                var ApprovalRequests = new List<ApprovalRequest>();
+                if (isAdmin)
+                {
+                    ApprovalRequests = await _context.ApprovalRequests.ToListAsync();
+                }
+                else
+                {
+                    ApprovalRequests = await _context.ApprovalRequests.Where(item => item.ApproverId.Equals(idFromJWT)).ToListAsync();
+                }
 
                 var approvalRequestDetailsModel = ApprovalRequests.Select(ar =>
                 {

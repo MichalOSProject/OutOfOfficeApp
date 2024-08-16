@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace OutOfOffice.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240812185154_InitialMigration")]
+    [Migration("20240815141831_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -316,6 +316,38 @@ namespace OutOfOffice.Server.Migrations
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.JwtTokens", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Expiration")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("JwtTokens");
+                });
+
             modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.LeaveRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -499,6 +531,17 @@ namespace OutOfOffice.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Partner");
+                });
+
+            modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.JwtTokens", b =>
+                {
+                    b.HasOne("OutOfOffice.Server.Models.SQLmodels.Employee", "employeesToken")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("employeesToken");
                 });
 
             modelBuilder.Entity("OutOfOffice.Server.Models.SQLmodels.LeaveRequest", b =>

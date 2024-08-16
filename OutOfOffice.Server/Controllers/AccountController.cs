@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using OutOfOffice.Server.Models.SQLmodels;
 using Microsoft.IdentityModel.Tokens;
 using OutOfOffice.Server.Models.Input;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OutOfOffice.Server.Controllers
 {
@@ -30,6 +31,8 @@ namespace OutOfOffice.Server.Controllers
             _context = context;
             _userService = userService;
         }
+
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] logonModelInput model)
         {
@@ -62,6 +65,7 @@ namespace OutOfOffice.Server.Controllers
             return BadRequest("Invalid Data");
         }
 
+        [Authorize(Policy = "HRPosition")]
         [HttpPost("username")]
         public async Task<IActionResult> userName([FromBody] int usernameID)
         {
@@ -76,6 +80,7 @@ namespace OutOfOffice.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "HRPosition")]
         [HttpPost("update")]
         public async Task<IActionResult> updateData([FromBody] registerUserModelInput model)
         {
@@ -106,6 +111,7 @@ namespace OutOfOffice.Server.Controllers
 
         }
 
+        [Authorize]
         [HttpPost("passwordReset")]
         public async Task<IActionResult> resetPassword([FromBody] resetPasswordModelInput model)
         {

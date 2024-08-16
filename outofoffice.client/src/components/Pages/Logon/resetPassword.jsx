@@ -9,6 +9,8 @@ const ResetPasswordPage = () => {
     const navigate = useNavigate();
     const [errorText, setErrorText] = useState(null);
     const [isCorrectStatus, setIsCorrectStatus] = useState();
+    const token = localStorage.getItem('token');
+
     const isCorrect = () => {
         const formData = getValues();
         if (formData.passwordN1 === formData.passwordN2) {
@@ -35,6 +37,7 @@ const ResetPasswordPage = () => {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(loginData)
